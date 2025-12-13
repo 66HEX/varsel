@@ -1,29 +1,46 @@
-<script lang="ts">
-	import type { VarselToastOptions } from './types';
-
-	export let options: VarselToastOptions = {
-		position: 'top-right',
-		max: 3
-	};
-
-	export { type VarselToastOptions } from './types';
+<script lang="ts" context="module">
+export {
+	toast,
+	type ToastData,
+	type ToastInvoker,
+	type ToastPosition,
+} from "./internals";
 </script>
 
-<div class="varsel-toaster" data-position={options.position}>
-	<slot />
-</div>
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import VarselManager from './VarselManager.svelte';
+	import {
+		toastState,
+		toasterInstanceManager,
+		type ToastData,
+	} from './internals';
 
-<style>
-	.varsel-toaster {
-		position: fixed;
-		inset: 1.5rem;
-		pointer-events: none;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
+	export let expandedGap: number | undefined = undefined;
 
-	.varsel-toaster[data-position='top-right'] {
-		align-items: flex-end;
-	}
-</style>
+	let toasts: ToastData[] = [];
+	const instanceId = toasterInstanceManager.registerInstance();
+
+	const handleRemove = (id: string) => {
+		toastState.remove(id);
+	};
+
+	onMount(() => {
+		toasts = toastState.getToasts();
+		const unsubscribe = toastState.subscribe((value) => {
+			toasts = value;
+		});
+		return () => {
+			unsubscribe();
+			toasterInstanceManager.unregisterInstance(instanceId);
+		};
+	});
+</script>
+
+{#if toasterInstanceManager.isActiveInstance(instanceId)}
+	{#if expandedGap === undefined}
+		<VarselManager {toasts} onRemove={handleRemove} />
+	{:else}
+		<VarselManager {toasts} onRemove={handleRemove} {expandedGap} />
+	{/if}
+{/if}
