@@ -1,0 +1,14 @@
+{
+  "name": "varsel-monorepo",
+  "packageManager": "bun@1.3.3",
+  "private": true,
+  "scripts": {
+    "build": "bun run build:package && bun run build:docs",
+    "build:package": "bun run --cwd=packages/varsel build",
+    "build:docs": "bun run --cwd=apps/docs build",
+    "dev": "bun run --cwd=apps/docs dev",
+    "check": "bun run --cwd=packages/varsel check && bun run --cwd=apps/docs check",
+    "lint": "bun run --cwd=packages/varsel lint"
+  },
+  "workspaces": ["packages/*", "apps/*"]
+}
