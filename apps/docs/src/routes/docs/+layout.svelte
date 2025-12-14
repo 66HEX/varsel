@@ -57,7 +57,7 @@ const nextLink = $derived(
 
 								{#if nextLink}
 									<a
-										class="group flex flex-col rounded-md border border-border bg-card px-4 py-3 shadow-sm transition-[background-color] duration-150 ease-out hover:bg-card-muted sm:text-right"
+										class={`group flex flex-col rounded-md border border-border bg-card px-4 py-3 shadow-sm transition-[background-color] duration-150 ease-out hover:bg-card-muted sm:text-right ${previousLink ? "" : "sm:col-start-2"}`}
 										href={nextLink.href}
 									>
 										<span class="text-[10px] font-medium uppercase tracking-wide text-foreground/45">
