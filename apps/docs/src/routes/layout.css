@@ -12,6 +12,9 @@
 	--color-border: oklch(0.8925 0.0014 var(--base-hue));
 	--color-card: oklch(1 0 0);
 	--color-card-muted: oklch(0.96 0.002 var(--base-hue));
+	--shadow-sm:
+		0px 1px 1px -0.5px rgba(0, 0, 0, 0.15), 0px 3px 3px -1.5px
+		rgba(0, 0, 0, 0.05);
 }
 
 .dark {
@@ -30,6 +33,7 @@
 	--color-border: var(--border);
 	--color-card: var(--card);
 	--color-card-muted: var(--card-muted);
+	--shadow-sm: var(--shadow-sm);
 }
 
 ::view-transition-old(root),
