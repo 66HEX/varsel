@@ -10,6 +10,7 @@ build
 .svelte-kit
 .turbo
 *.tsbuildinfo
+*.tgz
 
 # environments
 .env
