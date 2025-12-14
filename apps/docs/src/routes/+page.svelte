@@ -31,11 +31,14 @@
 				/>
 			</svg>
 
-			<h1 class="relative z-10 text-9xl text-foreground tracking-tight font-medium font-mono">
+			<h1 class="relative z-10 text-8xl md:text-9xl text-foreground tracking-tight font-medium font-mono">
 				Varsel
+				<sup class="absolute top-0 left-1/2 -translate-x-1/2 text-xs text-foreground/70 uppercase tracking-wide font-medium">
+					<span class="font-mono text-[10px] text-foreground/45">[Norw.]</span> alert
+				</sup>
 			</h1>
 		</div>
-		<p class="text-2xl text-vs-foreground/70 leading-relaxed font-light">
+		<p class="relative text-2xl text-vs-foreground/70 leading-relaxed font-light z-10">
 			Svelte-native toast system inspired by Sonner.
 		</p>
 	</div>
