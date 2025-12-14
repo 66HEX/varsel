@@ -1,1 +1,33 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "varsel/styles.css";
+
+@source "../../node_modules/varsel/dist/**/*.{svelte,js}";
+
+
+:root {
+	--base-hue: 265;
+	--color-background: oklch(0.9851 0.002 var(--base-hue));
+	--color-foreground: oklch(0.1408 0.0044 var(--base-hue));
+	--color-foreground-invert: oklch(0.9851 0.002 var(--base-hue));
+	--color-border: oklch(0.8925 0.0014 var(--base-hue));
+	--color-card: oklch(1 0 0);
+	--color-card-muted: oklch(0.96 0.002 var(--base-hue));
+}
+
+.dark {
+   	--color-background: oklch(0.1558 0.0044 var(--base-hue));
+    --color-foreground: oklch(0.9824 0.0013 var(--base-hue));
+   	--color-foreground-invert: oklch(0.1408 0.0044 var(--base-hue));
+    --color-border: oklch(0.278 0.012 var(--base-hue));
+    --color-card: oklch(0.1703 0.0065 var(--base-hue));
+   	--color-card-muted: oklch(0.2139 0.0095 var(--base-hue));
+}
+
+@theme {
+   	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-foreground-invert: var(--foreground-invert);
+	--color-border: var(--border);
+	--color-card: var(--card);
+	--color-card-muted: var(--card-muted);
+}

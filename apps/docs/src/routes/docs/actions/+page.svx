@@ -1,0 +1,93 @@
+<script lang="ts">
+import { toast } from "varsel";
+
+const showActionToast = () => {
+	toast({
+		title: "Email scheduled",
+		description: "Will send in ten minutes.",
+		action: {
+			label: "Undo",
+			onClick: () => {
+				console.log("Email cancelled");
+			},
+		},
+	});
+};
+
+const showCloseHookToast = () => {
+	const id = toast({
+		title: "Export ready",
+		description: "Opening the download dialog...",
+		onClose: () => {
+			console.log(`Toast ${id} has left the screen`);
+		},
+	});
+};
+</script>
+
+<svelte:head><title>Varsel docs — Actions & callbacks</title></svelte:head>
+
+# Actions & callbacks
+
+Some events deserve more than a static status message. Varsel lets you attach a single action button plus lifecycle callbacks so people can immediately respond.
+
+## Action buttons
+
+Provide an `action` object with a `label` and an `onClick` handler. The handler receives no arguments, so close over whatever data you need. Varsel automatically focuses the button after the toast animates in, and closes the toast after the action fires.
+
+```svelte
+<script lang="ts">
+	import { toast } from "varsel";
+
+	const undo = () => {
+		toast({
+			title: "Email scheduled",
+			description: "Will send in ten minutes.",
+			action: {
+				label: "Undo",
+				onClick: () => {
+					console.log("Email cancelled");
+				},
+			},
+		});
+	};
+</script>
+
+<button class="rounded-md bg-foreground h-9 px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]" onclick={undo}>
+	Show action toast
+</button>
+```
+
+<div class="my-4">
+	<button
+		type="button"
+		class="rounded-md bg-foreground h-9 px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={showActionToast}
+	>
+		Try the action toast
+	</button>
+</div>
+
+## Close hooks
+
+The optional `onClose` callback fires once the toast fully exits the viewport (for example after a timer, swipe gesture or `toast.dismiss`). Use it to trigger follow-up work such as clearing stores or kicking off another toast.
+
+```ts
+const id = toast({
+	title: "Export ready",
+	description: "Opening the download dialog...",
+	onClose: () => {
+		console.log(`Toast ${id} has left the screen`);
+	},
+});
+```
+
+<div class="my-4">
+	<button
+		type="button"
+		class="rounded-md bg-card border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={showCloseHookToast}
+	>
+		Trigger close hook
+	</button>
+</div>

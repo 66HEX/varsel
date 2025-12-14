@@ -1,0 +1,95 @@
+<script lang="ts">
+import { toast } from "varsel";
+
+const positions = [
+	"top-left",
+	"top-center",
+	"top-right",
+	"bottom-left",
+	"bottom-center",
+	"bottom-right",
+] as const;
+
+const trigger = (position: typeof positions[number]) => {
+	toast({
+		title: `Toast pinned to ${position}`,
+		description: "Each anchor keeps its own stack.",
+		position,
+	});
+};
+</script>
+
+<svelte:head><title>Varsel docs — Positions & layout</title></svelte:head>
+
+# Positions & layout
+
+Every toast decides where it wants to live. By default Varsel pushes notifications to the bottom center of the viewport, but you may choose any of the six predefined anchors: `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center` or `bottom-right`.
+
+## Targeting a position
+
+Pass the desired `position` when invoking `toast`. Stacks are evaluated per anchor so firing multiple toasts with different positions will not affect each other.
+
+```svelte
+<script lang="ts">
+	import { toast } from "varsel";
+
+	const positions = [
+		"top-left",
+		"top-center",
+		"top-right",
+		"bottom-left",
+		"bottom-center",
+		"bottom-right",
+	] as const;
+
+	const trigger = (position: typeof positions[number]) => {
+		toast({
+			title: `Toast pinned to ${position}`,
+			description: "Each anchor keeps its own stack.",
+			position,
+		});
+	};
+</script>
+
+<div class="grid grid-cols-2 gap-3 md:grid-cols-3">
+	{#each positions as position}
+		<button
+			type="button"
+			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+			onclick={() => trigger(position)}
+		>
+			{position}
+		</button>
+	{/each}
+</div>
+```
+
+Use the controls below to preview every location without copying the snippet.
+
+<div class="my-4 grid grid-cols-2 gap-3 md:grid-cols-3">
+	{#each positions as position}
+		<button
+			type="button"
+			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+			onclick={() => trigger(position)}
+		>
+			{position}
+		</button>
+	{/each}
+</div>
+
+Varsel automatically mirrors swipe gestures for the chosen anchor (for example a toast in the top-right can be flicked to the right or up to dismiss).
+
+## Fine-tuning the stack gap
+
+When a stack is hovered, the items expand to show their full height. Adjust the amount of spacing used in this expanded state with the optional `expandedGap` prop on `VarselToaster`.
+
+```svelte
+<script lang="ts">
+	import { VarselToaster } from "varsel";
+</script>
+
+<VarselToaster expandedGap={24} />
+```
+
+Stick with the default gap for a compact look or increase it when your toasts show longer descriptions.

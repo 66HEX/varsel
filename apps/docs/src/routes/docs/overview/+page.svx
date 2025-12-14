@@ -1,0 +1,121 @@
+<script lang="ts">
+import { toast } from "varsel";
+
+const showIntroToast = () => {
+	toast({
+		title: "Deployment finished",
+		description: "Production is running the latest build.",
+	});
+};
+
+const helperExamples = [
+	{
+		label: "Success",
+		handler: () =>
+			toast.success({
+				title: "Success",
+				description: "Deployment completed successfully.",
+			}),
+	},
+	{
+		label: "Warning",
+		handler: () =>
+			toast.warning({
+				title: "Slow build",
+				description: "Hang tight, we are almost done.",
+			}),
+	},
+	{
+		label: "Error",
+		handler: () =>
+			toast.error({
+				title: "Deploy failed",
+				description: "Rollback is running.",
+			}),
+	},
+];
+</script>
+
+<svelte:head><title>Varsel docs — Overview</title></svelte:head>
+
+# Overview
+
+Varsel ships a headless toaster that feels native in every Svelte project. This overview explains how to install the package, mount the shared toaster host and trigger your first notification.
+
+## Install Varsel
+
+Use the package manager you already trust. Every build of this repo uses Bun, but npm/pnpm/yarn work exactly the same.
+
+```bash
+bun add varsel
+# or
+npm install varsel
+```
+
+Varsel includes its own design tokens. Import the stylesheet once (for example inside your root `+layout.svelte` or `app.css`) by adding:
+
+```
+@import "varsel/styles.css";
+```
+
+## Mount the toaster host
+
+Render the `VarselToaster` component near the top of your tree so every route shares the same host. Varsel automatically keeps only the first host active, so it is safe to render it in layouts.
+
+```svelte
+<script lang="ts">
+	import { VarselToaster } from "varsel";
+</script>
+
+<slot />
+<VarselToaster />
+```
+
+## Trigger your first toast
+
+Call the `toast` helper whenever you want to show feedback. The helper accepts either a string (mapped to the description) or an object with full control over the toast.
+
+<div class="my-4">
+	<button
+		type="button"
+		class="rounded-md bg-vs-foreground px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={showIntroToast}
+	>
+		Show toast
+	</button>
+</div>
+
+```svelte
+<script lang="ts">
+	import { toast } from "varsel";
+
+	const handleClick = () => {
+		toast({
+			title: "Deployment finished",
+			description: "Production is running the latest build.",
+		});
+	};
+</script>
+
+<button class="rounded-md bg-vs-foreground px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]" onclick={handleClick}>
+	Show toast
+</button>
+```
+
+## Helper shortcuts
+
+When you only need a quick notification, you can call `toast("Saved draft")`. Varsel also exposes `toast.success`, `toast.warning` and `toast.error` helpers that preconfigure the visual variant. Press one of the buttons below to see them in action:
+
+<div class="my-4 flex flex-wrap gap-3">
+	{#each helperExamples as example}
+		<button
+			type="button"
+			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+			onclick={example.handler}
+		>
+			{example.label}
+		</button>
+	{/each}
+</div>
+
+These helpers still return the toast id so you can dismiss or update it later.

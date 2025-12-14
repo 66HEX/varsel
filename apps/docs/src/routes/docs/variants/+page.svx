@@ -1,0 +1,126 @@
+<script lang="ts">
+import { toast } from "varsel";
+
+const variantOptions = ["default", "success", "warning", "destructive"] as const;
+
+const triggerVariant = (variant: (typeof variantOptions)[number]) =>
+	toast({
+		title: `${variant} toast`,
+		description: "Pick the tone that matches the event.",
+		variant,
+	});
+</script>
+
+<svelte:head><title>Varsel docs — Variants & styling</title></svelte:head>
+
+# Variants & styling
+
+Varsel keeps visuals opinionated yet flexible. Choose a preset variant for status-driven colors and stack your own classes on top for bespoke experiences.
+
+## Variant property
+
+Set the `variant` property when invoking `toast`. Available values are `default`, `success`, `warning` and `destructive`.
+
+```svelte
+<script lang="ts">
+	import { toast } from "varsel";
+
+	const variants = ["default", "success", "warning", "destructive"] as const;
+</script>
+
+<div class="flex flex-wrap gap-3">
+	{#each variants as variant}
+		<button
+			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+			onclick={() =>
+				toast({
+					title: `${variant} toast`,
+					description: "Pick the tone that matches the event.",
+					variant,
+				})}
+		>
+			{variant}
+		</button>
+	{/each}
+</div>
+```
+
+<div class="my-4 flex flex-wrap gap-3">
+	{#each variantOptions as variant}
+		<button
+			type="button"
+			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+			onclick={() => triggerVariant(variant)}
+		>
+			Try {variant}
+		</button>
+	{/each}
+</div>
+
+## Design tokens
+
+Varsel’s default look ships from the bundled stylesheet, but everything is powered by a small set of CSS variables. Instead of importing the package CSS you can copy the token definitions below into your own theme file and tweak every hue, shadow and easing curve.
+
+```css
+@import "tailwindcss";
+
+:root {
+	--base-hue: 265;
+	--color-vs-popover: oklch(1 0 0);
+	--color-vs-popover-muted: oklch(0.96 0.002 var(--base-hue));
+	--color-vs-foreground: oklch(0.1408 0.0044 var(--base-hue));
+	--color-vs-border: oklch(0.8925 0.0014 var(--base-hue));
+	--color-vs-ring: oklch(0.55 0.012 var(--base-hue));
+	--color-vs-ring-offset: oklch(0.96 0.002 var(--base-hue));
+	--color-vs-destructive: oklch(0.62 0.21 25);
+	--color-vs-warning: oklch(0.8 0.2 75);
+	--color-vs-success: oklch(0.7 0.18 155);
+
+	--shadow-vs-button:
+		0px 1px 1px -0.5px rgba(0, 0, 0, 0.15), 0px 3px 3px -1.5px
+		rgba(0, 0, 0, 0.05);
+	--shadow-vs-toast:
+		0px 1px 1px -0.5px rgba(0, 0, 0, 0.15),
+		0px 3px 3px -1.5px rgba(0, 0, 0, 0.05),
+		0px 6px 6px -3px rgba(0, 0, 0, 0.05),
+		0px 12px 12px -6px rgba(0, 0, 0, 0.05),
+		0px 24px 24px -12px rgba(0, 0, 0, 0.05),
+		0px 48px 48px -24px rgba(0, 0, 0, 0.05);
+	--radius-base: 0.125rem;
+	--ease-vs-button: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	--ease-vs-toast: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dark {
+	--color-vs-popover: oklch(0.2139 0.0101 var(--base-hue));
+	--color-vs-popover-muted: oklch(0.2502 0.016 var(--base-hue));
+	--color-vs-foreground: oklch(0.9824 0.0013 var(--base-hue));
+	--color-vs-border: oklch(0.278 0.015 var(--base-hue));
+	--color-vs-ring: oklch(0.58 0.012 var(--base-hue));
+	--color-vs-ring-offset: oklch(0.15 0.005 var(--base-hue));
+	--color-vs-destructive: oklch(0.72 0.27 25);
+	--color-vs-warning: oklch(0.82 0.24 85);
+	--color-vs-success: oklch(0.78 0.25 155);
+}
+
+@theme {
+	--color-vs-popover: var(--vs-popover);
+	--color-vs-popover-muted: var(--vs-popover-muted);
+	--color-vs-foreground: var(--vs-foreground);
+	--color-vs-border: var(--vs-border);
+	--color-vs-ring: var(--vs-ring);
+	--color-vs-ring-offset: var(--vs-ring-offset);
+	--color-vs-destructive: var(--vs-destructive);
+	--color-vs-warning: var(--vs-warning);
+	--color-vs-success: var(--vs-success);
+	--shadow-vs-button: var(--shadow-vs-button);
+	--shadow-vs-toast: var(--shadow-vs-toast);
+	--radius-vs-sm: calc(var(--radius-base) * 2);
+	--radius-vs-md: calc(var(--radius-base) * 3);
+	--radius-vs-lg: calc(var(--radius-base) * 4);
+	--ease-vs-button: var(--ease-vs-button);
+	--ease-vs-toast: var(--ease-vs-toast);
+}
+```
+
+Override any of these values (for example swap the hue or easing curves) to give Varsel a custom feel while keeping the component API the same. If you do include the packaged CSS, your overrides still win thanks to normal cascade rules.

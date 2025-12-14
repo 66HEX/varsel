@@ -10,4 +10,9 @@ declare global {
 	}
 }
 
+declare module "*.svx" {
+	import type { SvelteComponentTyped } from "svelte";
+	export default class extends SvelteComponentTyped<Record<string, unknown>> {}
+}
+
 export {};

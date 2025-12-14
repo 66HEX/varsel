@@ -1,29 +1,38 @@
 <script lang="ts">
-	import { VarselToaster } from '@varsel/svelte';
+import logoMark from "$lib/assets/vector.png";
 </script>
 
-<main class="hero">
-	<section>
-		<h1>Varsel</h1>
-		<p class="lede">
-			Svelte-native toast system inspired by Sonner. This page is wired to the workspace package so
-			you can iterate on components and documentation side by side.
+<main class="h-screen w-screen flex flex-col gap-8 items-center justify-center bg-background px-4">
+	<div class="flex flex-col gap-4 max-w-2xl text-center">
+		<div class="relative flex items-center justify-center">
+			<img
+				src={logoMark}
+				alt="Varsel Logo"
+				class="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-55 w-auto"
+				aria-hidden="true"
+			/>
+			<h1 class="relative z-10 text-9xl text-foreground tracking-tight font-medium">
+				Varsel
+			</h1>
+		</div>
+		<p class="text-2xl text-vs-foreground/70 leading-relaxed font-light">
+			Svelte-native toast system inspired by Sonner.
 		</p>
-	</section>
-
-	<VarselToaster />
+	</div>
+	<div class="flex flex-wrap items-center justify-center gap-4">
+		<a
+			class="inline-flex h-9 items-center rounded-md bg-foreground px-8 text-sm font-medium text-foreground-invert shadow-sm hover:bg-foreground/80 transition-[background-color] duration-150 ease-out"
+			href="/docs/overview"
+		>
+		    Documentation
+		</a>
+		<a
+			class="inline-flex h-9 items-center rounded-md bg-card border border-border px-8 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color] duration-150 ease-out"
+			href="https://github.com/hex/varsel"
+			target="_blank"
+			rel="noreferrer"
+		>
+		    GitHub
+		</a>
+	</div>
 </main>
-
-<style>
-	.hero {
-		min-height: 100vh;
-		display: grid;
-		gap: 2rem;
-		align-content: center;
-	}
-
-	.lede {
-		font-size: 1.1rem;
-		color: hsl(0 0% 40%);
-	}
-</style>

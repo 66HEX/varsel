@@ -1,0 +1,135 @@
+<script lang="ts">
+import { toast } from "varsel";
+
+const showShortToast = () =>
+	toast({ title: "Saved", description: "Done!", duration: 1500 });
+
+let persistentId: string | null = null;
+
+const showPersistentToast = () => {
+	if (persistentId) {
+		toast.dismiss(persistentId);
+	}
+
+	persistentId = toast({
+		title: "Queued deploy",
+		description: "We will notify you once it finishes.",
+		duration: 0,
+	});
+};
+
+const simulateBuild = () => {
+	const id = toast({ title: "Shipping build", duration: 0 });
+	setTimeout(() => {
+		toast.dismiss(id);
+		toast.success("Build finished");
+	}, 3500);
+};
+
+const dismissAllToasts = () => {
+	toast.dismissAll();
+	persistentId = null;
+};
+</script>
+
+<svelte:head><title>Varsel docs — Timing & lifecycle</title></svelte:head>
+
+# Timing & lifecycle
+
+Toasts automatically dismiss after five seconds, but you stay in control of their lifetime. Varsel pauses the countdown while the stack is hovered, focused or swiped so people can always finish reading the message.
+
+## Custom durations
+
+Set the `duration` (milliseconds) on every toast. Use any positive number for a finite timeout or `0` to keep the toast on screen until you dismiss it manually.
+
+```svelte
+<script lang="ts">
+	import { toast } from "varsel";
+
+	const short = () =>
+		toast({ title: "Saved", description: "Done!", duration: 1500 });
+
+	const persistent = () =>
+		toast({
+			title: "Queued deploy",
+			description: "We will notify you once it finishes.",
+			duration: 0,
+		});
+</script>
+
+<div class="flex flex-wrap gap-3">
+	<button class="rounded-md bg-vs-foreground px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]" onclick={short}>
+		Short toast
+	</button>
+	<button class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]" onclick={persistent}>
+		Persistent toast
+	</button>
+</div>
+```
+
+<div class="my-4 flex flex-wrap gap-3">
+	<button
+		type="button"
+		class="rounded-md bg-vs-foreground px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={showShortToast}
+	>
+		Short toast
+	</button>
+	<button
+		type="button"
+		class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={showPersistentToast}
+	>
+		Persistent toast
+	</button>
+</div>
+
+## Manual dismissal
+
+The `toast` helper returns the id of the new toast so you can dismiss it later. Call `toast.dismiss(id)` to close a single notification or `toast.dismissAll()` to clear every stack at once.
+
+```svelte
+<script lang="ts">
+	import { toast } from "varsel";
+
+	const build = () => {
+		const id = toast({ title: "Shipping build", duration: 0 });
+		setTimeout(() => {
+			toast.dismiss(id);
+			toast.success("Build finished");
+		}, 4000);
+	};
+
+	const nuke = () => {
+		toast.dismissAll();
+	};
+</script>
+
+<div class="flex flex-wrap gap-3">
+	<button class="rounded-md bg-foreground h-9 px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]" onclick={build}>
+		Simulate build
+	</button>
+	<button class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]" onclick={nuke}>
+		Dismiss all
+	</button>
+</div>
+```
+
+<div class="my-4 flex flex-wrap gap-3">
+	<button
+		type="button"
+		class="rounded-md bg-foreground h-9 px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={simulateBuild}
+	>
+		Simulate build
+	</button>
+	<button
+		type="button"
+		class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={dismissAllToasts}
+	>
+		Dismiss all
+	</button>
+</div>
+
+Manual dismissal also runs the toast’s `onClose` callback if you supplied one.
