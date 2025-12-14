@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 export const POSITION_CONFIGS = {
 	"top-left": {
 		animateIn: { x: -100, y: -20 },
-		animateOut: { x: -100, y: -20 },
+		animateOut: { x: -100, y: -100 },
 	},
 	"top-center": {
 		animateIn: { x: 0, y: -100 },
@@ -11,7 +11,7 @@ export const POSITION_CONFIGS = {
 	},
 	"top-right": {
 		animateIn: { x: 100, y: -20 },
-		animateOut: { x: 100, y: -20 },
+		animateOut: { x: 100, y: -100 },
 	},
 	"bottom-left": {
 		animateIn: { x: -100, y: 20 },
