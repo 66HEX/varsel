@@ -4,7 +4,6 @@ import { page } from "$app/stores";
 import { onMount } from "svelte";
 import { cn } from "$lib/utils/cn";
 import type { DocNavGroup } from "$lib/docs/navigation";
-import logo from "$lib/assets/varsel-logo.svg";
 
 let { links = [] } = $props<{ links: DocNavGroup[] }>();
 
@@ -12,20 +11,42 @@ type ThemeMode = "light" | "dark";
 let theme = $state<ThemeMode>("light");
 
 const applyTheme = (value: ThemeMode) => {
-	if (!browser) return;
-	document.documentElement.classList.toggle("dark", value === "dark");
+  if (!browser) return;
+  document.documentElement.classList.toggle("dark", value === "dark");
+};
+
+const applyThemeWithVT = (value: ThemeMode) => {
+  if (!browser) return;
+
+  if (!document.startViewTransition) {
+    applyTheme(value);
+    return;
+  }
+
+  const html = document.documentElement;
+  html.classList.add("theme-vt");
+
+  const vt = document.startViewTransition(() => {
+    applyTheme(value);
+  });
+
+  vt.finished.finally(() => {
+    html.classList.remove("theme-vt");
+  });
 };
 
 const setTheme = (value: ThemeMode) => {
-	theme = value;
-	if (!browser) return;
-	applyTheme(value);
-	window.localStorage.setItem("varsel-theme", value);
+  theme = value;
+  if (!browser) return;
+
+  applyThemeWithVT(value);
+  window.localStorage.setItem("varsel-theme", value);
 };
 
 const toggleTheme = () => {
-	setTheme(theme === "dark" ? "light" : "dark");
+  setTheme(theme === "dark" ? "light" : "dark");
 };
+
 
 onMount(() => {
 	if (!browser) return;

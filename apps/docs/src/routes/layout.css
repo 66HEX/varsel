@@ -36,17 +36,27 @@
 	--shadow-sm: var(--shadow-sm);
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 150ms;
+:root { view-transition-name: none; }
+
+::view-transition-old(docs-content),
+::view-transition-new(docs-content) {
+  animation-duration: 100ms;
   animation-timing-function: ease-out;
 }
 
-::view-transition-old(root) { animation-name: vt-fade-out; }
-::view-transition-new(root) { animation-name: vt-fade-in; }
+::view-transition-old(docs-content) { animation-name: vt-fade-out; }
+::view-transition-new(docs-content) { animation-name: vt-fade-in; }
 
 @keyframes vt-fade-out { to { opacity: 0; } }
 @keyframes vt-fade-in  { from { opacity: 0; } }
+
+html.theme-vt:root { view-transition-name: root; }
+
+html.theme-vt ::view-transition-old(root),
+html.theme-vt ::view-transition-new(root) {
+  animation-duration: 150ms;
+  animation-timing-function: ease-out;
+}
 
 @layer base {
 	body {
