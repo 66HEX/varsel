@@ -40,7 +40,7 @@
 
 ::view-transition-old(docs-content),
 ::view-transition-new(docs-content) {
-  animation-duration: 100ms;
+  animation-duration: 150ms;
   animation-timing-function: ease-out;
 }
 
