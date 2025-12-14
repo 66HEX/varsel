@@ -182,6 +182,16 @@ function collectHeadings() {
 				current = item.id;
 			}
 		}
+
+		const last = parsed[parsed.length - 1];
+		if (last) {
+			const viewportBottom = window.scrollY + window.innerHeight;
+			const docHeight = document.documentElement.scrollHeight;
+			if (viewportBottom >= docHeight - 20) {
+				current = last.id;
+			}
+		}
+
 		activeId = current;
 		window.requestAnimationFrame(() => updateIndicator(current));
 	};
