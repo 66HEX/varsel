@@ -2,7 +2,6 @@
 
 :root {
 	--base-hue: 265;
-	--chart-hue-step: 4;
 	--color-vs-popover: oklch(1 0 0);
 	--color-vs-popover-muted: oklch(0.96 0.002 var(--base-hue));
 	--color-vs-foreground: oklch(0.1408 0.0044 var(--base-hue));
@@ -23,7 +22,7 @@
 		0px 12px 12px -6px rgba(0, 0, 0, 0.05),
 		0px 24px 24px -12px rgba(0, 0, 0, 0.05),
 		0px 48px 48px -24px rgba(0, 0, 0, 0.05);
-	--radius-base: 0.175rem;
+	--radius-base: 0.125rem;
 	--ease-vs-button: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	--ease-vs-toast: cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -52,9 +51,9 @@
 	--color-vs-success: var(--vs-success);
 	--shadow-vs-button: var(--shadow-vs-button);
 	--shadow-vs-toast: var(--shadow-vs-toast);
-	--radius-sm: calc(var(--radius-base) * 2);
-	--radius-md: calc(var(--radius-base) * 3);
-	--radius-lg: calc(var(--radius-base) * 4);
+	--radius-vs-sm: calc(var(--radius-base) * 2);
+	--radius-vs-md: calc(var(--radius-base) * 3);
+	--radius-vs-lg: calc(var(--radius-base) * 4);
 	--ease-vs-button: var(--ease-vs-button);
 	--ease-vs-toast: var(--ease-vs-toast);
 }

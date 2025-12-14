@@ -143,7 +143,7 @@ class ToasterInstanceManager {
 export const toasterInstanceManager = new ToasterInstanceManager();
 
 export const toastContainerVariants = cva(
-	"pointer-events-auto fixed rounded-lg border shadow-vs-toast will-change-transform border-vs-border bg-vs-popover",
+	"pointer-events-auto fixed rounded-vs-lg border shadow-vs-toast will-change-transform border-vs-border bg-vs-popover",
 	{
 		variants: {
 			position: {
@@ -170,7 +170,7 @@ export const toastContainerVariants = cva(
 	},
 );
 
-export const toastContentVariants = cva("relative overflow-hidden rounded-lg", {
+export const toastContentVariants = cva("relative overflow-hidden rounded-vs-lg", {
 	variants: {
 		variant: {
 			default: "",
