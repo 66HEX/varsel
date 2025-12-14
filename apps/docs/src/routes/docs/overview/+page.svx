@@ -54,7 +54,7 @@ npm install varsel
 
 Varsel includes its own design tokens. Import the stylesheet once (for example inside your root `+layout.svelte` or `app.css`) by adding:
 
-```
+```css
 @import "varsel/styles.css";
 ```
 

@@ -5,17 +5,28 @@ import { VarselToaster } from "varsel";
 
 let { children } = $props();
 
-import { onNavigate } from '$app/navigation';
+import { onNavigate } from "$app/navigation";
+
+const isHomePath = (path?: string) => path === "/";
+const isDocsPath = (path?: string) => path?.startsWith("/docs");
 
 onNavigate((navigation) => {
-  if (!document.startViewTransition) return;
+	if (!document.startViewTransition) return;
 
-  return new Promise<void>((resolve) => {
-    document.startViewTransition(async () => {
-      resolve();
-      await navigation.complete;
-    });
-  });
+	const fromPath = navigation.from?.url.pathname;
+	const toPath = navigation.to?.url.pathname;
+
+	const enteringDocs = isHomePath(fromPath) && isDocsPath(toPath);
+	const leavingDocs = isDocsPath(fromPath) && isHomePath(toPath);
+
+	if (!enteringDocs && !leavingDocs) return;
+
+	return new Promise<void>((resolve) => {
+		document.startViewTransition(async () => {
+			resolve();
+			await navigation.complete;
+		});
+	});
 });
 
 </script>
