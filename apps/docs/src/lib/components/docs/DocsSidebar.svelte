@@ -1,11 +1,12 @@
 <script lang="ts">
 import { browser } from "$app/environment";
-import { page } from "$app/stores";
+import { page } from "$app/state";
 import { onMount } from "svelte";
 import { cn } from "$lib/utils/cn";
 import type { DocNavGroup } from "$lib/docs/navigation";
 
 let { links = [] } = $props<{ links: DocNavGroup[] }>();
+const currentPage = page;
 
 type ThemeMode = "light" | "dark";
 let theme = $state<ThemeMode>("light");
@@ -84,7 +85,7 @@ onMount(() => {
 	    			fill="currentColor"
 	    		/>
 	    	</svg>
-	    	<p class="text-lg font-medium tracking-tight">Varsel</p>
+	    	<p class="text-lg font-medium font-mono tracking-tight">Varsel</p>
 		</a>
 
 		<button
@@ -133,7 +134,7 @@ onMount(() => {
 							{group.label}
 						</p>
 						{#each group.links as link}
-							{@const isActive = $page.url.pathname.startsWith(link.href)}
+							{@const isActive = currentPage.url.pathname.startsWith(link.href)}
 							<a
 								href={link.href}
 								aria-current={isActive ? "page" : undefined}

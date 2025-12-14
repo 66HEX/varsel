@@ -11,8 +11,6 @@ const triggerVariant = (variant: (typeof variantOptions)[number]) =>
 	});
 </script>
 
-<svelte:head><title>Varsel docs — Variants & styling</title></svelte:head>
-
 # Variants & styling
 
 Varsel keeps visuals opinionated yet flexible. Choose a preset variant for status-driven colors and stack your own classes on top for bespoke experiences.

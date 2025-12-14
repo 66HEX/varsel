@@ -37,8 +37,6 @@ const runDeployment = (shouldFail = false) => {
 };
 </script>
 
-<svelte:head><title>Varsel docs — Promises & async</title></svelte:head>
-
 # Promises & async
 
 Not every action finishes instantly. `toast.promise` keeps people informed while an async task runs, automatically showing a spinner and swapping the copy once the work resolves or fails.

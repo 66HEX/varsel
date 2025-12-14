@@ -31,7 +31,7 @@
 				/>
 			</svg>
 
-			<h1 class="relative z-10 text-9xl text-foreground tracking-tight font-medium">
+			<h1 class="relative z-10 text-9xl text-foreground tracking-tight font-medium font-mono">
 				Varsel
 			</h1>
 		</div>

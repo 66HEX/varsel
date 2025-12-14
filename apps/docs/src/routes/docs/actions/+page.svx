@@ -33,8 +33,6 @@ const showNoCloseToast = () => {
 };
 </script>
 
-<svelte:head><title>Varsel docs — Actions & callbacks</title></svelte:head>
-
 # Actions & callbacks
 
 Some events deserve more than a static status message. Varsel lets you attach a single action button plus lifecycle callbacks so people can immediately respond.

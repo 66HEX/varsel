@@ -19,8 +19,6 @@ const trigger = (position: typeof positions[number]) => {
 };
 </script>
 
-<svelte:head><title>Varsel docs — Positions & layout</title></svelte:head>
-
 # Positions & layout
 
 Every toast decides where it wants to live. By default Varsel pushes notifications to the bottom center of the viewport, but you may choose any of the six predefined anchors: `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center` or `bottom-right`.

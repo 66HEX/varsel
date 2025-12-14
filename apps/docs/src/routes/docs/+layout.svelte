@@ -1,18 +1,20 @@
 <script lang="ts">
-import { page } from "$app/stores";
+import { page } from "$app/state";
 import DocsSidebar from "$lib/components/docs/DocsSidebar.svelte";
 import TableOfContents from "$lib/components/docs/TableOfContents.svelte";
 import { docLinks, docNavGroups } from "$lib/docs/navigation";
+import { getDocMetadata } from "$lib/docs/metadata";
 
 let { children } = $props();
 
-const pageStore = page;
+const currentPage = page;
 const normalizePath = (path: string) => {
 	if (path === "/") return path;
 	return path.replace(/\/+$/, "");
 };
 
-const currentPath = $derived(normalizePath($pageStore.url.pathname));
+const currentUrl = $derived(currentPage.url);
+const currentPath = $derived(normalizePath(currentUrl.pathname));
 const currentIndex = $derived(
 	docLinks.findIndex((link) => normalizePath(link.href) === currentPath),
 );
@@ -24,7 +26,78 @@ const nextLink = $derived(
 		? docLinks[currentIndex + 1]
 		: null,
 );
+const currentDocMeta = $derived(getDocMetadata(currentPath));
+const pageTitle = $derived(
+	currentDocMeta ? `Varsel docs — ${currentDocMeta.title}` : "Varsel docs",
+);
+const docDescription = $derived(
+	currentDocMeta?.description
+		? currentDocMeta.description
+		: currentDocMeta
+			? `${currentDocMeta.title} guide for Varsel notifications.`
+			: null,
+);
+const canonicalUrl = $derived(currentUrl.href);
+const docOgImage = $derived(
+	new URL("/web-app-manifest-512x512.png", currentUrl).href,
+);
+const docOgImageAlt = "Varsel logomark";
+const docsRootUrl = $derived(new URL("/docs", currentUrl).href);
+const docStructuredData = $derived(
+	currentDocMeta
+		? JSON.stringify({
+				"@context": "https://schema.org",
+				"@type": "TechArticle",
+				headline: currentDocMeta.title,
+				description: docDescription ?? undefined,
+				url: canonicalUrl,
+				mainEntityOfPage: canonicalUrl,
+				about: currentDocMeta.title,
+				inLanguage: "en",
+				isPartOf: {
+					"@type": "CreativeWorkSeries",
+					name: "Varsel documentation",
+					url: docsRootUrl,
+				},
+				author: {
+					"@type": "Person",
+					name: "Marek Jóźwiak",
+				},
+				publisher: {
+					"@type": "Organization",
+					name: "Varsel",
+					logo: {
+						"@type": "ImageObject",
+						url: docOgImage,
+					},
+				},
+			})
+		: null,
+);
 </script>
+
+<svelte:head>
+	<title>{pageTitle}</title>
+	{#if docDescription}
+		<meta name="description" content={docDescription} />
+		<meta property="og:description" content={docDescription} />
+		<meta name="twitter:description" content={docDescription} />
+	{/if}
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:title" content={pageTitle} />
+	<meta name="twitter:title" content={pageTitle} />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta property="og:image" content={docOgImage} />
+	<meta property="og:image:alt" content={docOgImageAlt} />
+	<meta property="og:image:type" content="image/svg+xml" />
+	<meta name="twitter:image" content={docOgImage} />
+	{#if docStructuredData}
+		<script type="application/ld+json">
+			{docStructuredData}
+		</script>
+	{/if}
+</svelte:head>
 
 <div class="min-h-screen w-full bg-background text-foreground">
 	<div class="flex min-h-screen w-full flex-col lg:flex-row lg:items-start">

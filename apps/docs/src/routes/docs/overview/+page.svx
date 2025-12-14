@@ -36,8 +36,6 @@ const helperExamples = [
 ];
 </script>
 
-<svelte:head><title>Varsel docs — Overview</title></svelte:head>
-
 # Overview
 
 Varsel ships a headless toaster that feels native in every Svelte project. This overview explains how to install the package, mount the shared toaster host and trigger your first notification.

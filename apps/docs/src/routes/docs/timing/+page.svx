@@ -32,8 +32,6 @@ const dismissAllToasts = () => {
 };
 </script>
 
-<svelte:head><title>Varsel docs — Timing & lifecycle</title></svelte:head>
-
 # Timing & lifecycle
 
 Toasts automatically dismiss after five seconds, but you stay in control of their lifetime. Varsel pauses the countdown while the stack is hovered, focused or swiped so people can always finish reading the message.
