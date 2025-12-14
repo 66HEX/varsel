@@ -21,13 +21,13 @@ import logoMark from "$lib/assets/vector.png";
 	</div>
 	<div class="flex flex-wrap items-center justify-center gap-4">
 		<a
-			class="inline-flex h-9 items-center rounded-md bg-foreground px-8 text-sm font-medium text-foreground-invert shadow-sm hover:bg-foreground/80 transition-[background-color] duration-150 ease-out"
+			class="inline-flex h-9 items-center rounded-md bg-foreground px-8 text-sm font-medium text-foreground-invert shadow-sm hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
 			href="/docs/overview"
 		>
 		    Documentation
 		</a>
 		<a
-			class="inline-flex h-9 items-center rounded-md bg-card border border-border px-8 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color] duration-150 ease-out"
+			class="inline-flex h-9 items-center rounded-md bg-card border border-border px-8 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
 			href="https://github.com/hex/varsel"
 			target="_blank"
 			rel="noreferrer"

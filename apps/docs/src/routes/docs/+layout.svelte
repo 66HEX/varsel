@@ -43,7 +43,7 @@ const nextLink = $derived(
 							<div class="grid gap-4 sm:grid-cols-2">
 								{#if previousLink}
 									<a
-										class="group flex flex-col rounded-md border border-border bg-background px-4 py-3 shadow-sm transition-[background-color] duration-150 ease-out hover:bg-card-muted"
+										class="group flex flex-col rounded-md border border-border bg-card px-4 py-3 shadow-sm transition-[background-color] duration-150 ease-out hover:bg-card-muted"
 										href={previousLink.href}
 									>
 										<span class="text-[10px] font-medium uppercase tracking-wide text-foreground/45">
@@ -57,7 +57,7 @@ const nextLink = $derived(
 
 								{#if nextLink}
 									<a
-										class="group flex flex-col rounded-md border border-border bg-background px-4 py-3 shadow-sm transition-[background-color] duration-150 ease-out hover:bg-card-muted sm:text-right"
+										class="group flex flex-col rounded-md border border-border bg-card px-4 py-3 shadow-sm transition-[background-color] duration-150 ease-out hover:bg-card-muted sm:text-right"
 										href={nextLink.href}
 									>
 										<span class="text-[10px] font-medium uppercase tracking-wide text-foreground/45">
