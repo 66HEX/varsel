@@ -17,6 +17,11 @@ import {
 	type SwipeAxis,
 	type SwipeDirection,
 } from "./internals";
+import {
+	hasVariantIcon,
+	variantIconMap,
+	type VariantIconDefinition,
+} from "./variant-icons";
 
 export let toast: PositionedToast;
 export let onRemove: (id: string) => void;
@@ -56,6 +61,8 @@ let isExiting = false;
 let exitAnimationComplete = false;
 let hasAnimatedIn = false;
 let isPointerHeld = false;
+let iconConfig: VariantIconDefinition | undefined;
+let showStatusIcon = false;
 
 let id: string;
 let title: string | undefined;
@@ -63,6 +70,7 @@ let description: string | undefined;
 let variant: PositionedToast["variant"];
 let duration: number;
 let action: PositionedToast["action"];
+let isLoading: boolean | undefined;
 let index: number;
 let renderIndex: number;
 let shouldClose: boolean | undefined;
@@ -77,6 +85,7 @@ $: ({
 	variant = "default",
 	duration = 5000,
 	action,
+	isLoading = false,
 	index,
 	renderIndex,
 	shouldClose,
@@ -192,6 +201,9 @@ const setFocusToToast = () => {
 	}
 	toastRef.focus();
 };
+
+$: iconConfig = hasVariantIcon(variant) ? variantIconMap[variant] : undefined;
+$: showStatusIcon = isLoading || Boolean(iconConfig);
 
 $: if (mounted && toastRef && !isExiting) {
 	if (!hasAnimatedIn && isLatest) {
@@ -650,6 +662,7 @@ const handleBlurCapture = (event: FocusEvent) => {
     <div
         role="alert"
         class={cn(swipeCursorClass)}
+        aria-busy={isLoading ? "true" : undefined}
         onpointerdown={handlePointerDown}
         onpointermove={handlePointerMove}
         onpointerup={handlePointerUp}
@@ -687,36 +700,107 @@ const handleBlurCapture = (event: FocusEvent) => {
             </button>
 
             <div class="p-4 pr-8">
-                {#if title}
-                    <div
-                        id={titleId}
-                        class="mb-1 text-sm leading-none font-medium select-none"
-                    >
-                        {title}
+                <div class="flex gap-3">
+                    {#if showStatusIcon}
+                        <span class="relative inline-flex h-4 w-4 shrink-0 items-center justify-center">
+                            <span
+                                class={cn(
+                                    "vs-spinner absolute inset-0 transition-[transform,opacity] duration-200 ease-out scale-100 opacity-100",
+                                    !isLoading && "scale-0 opacity-0",
+                                )}
+                                role="status"
+                                aria-label="Loading..."
+                            >
+                                <svg
+                                    viewBox="0 0 256 256"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="24"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <line x1="128" y1="32" x2="128" y2="64" />
+                                    <line x1="195.9" y1="60.1" x2="173.3" y2="82.7" />
+                                    <line x1="224" y1="128" x2="192" y2="128" />
+                                    <line x1="195.9" y1="195.9" x2="173.3" y2="173.3" />
+                                    <line x1="128" y1="224" x2="128" y2="192" />
+                                    <line x1="60.1" y1="195.9" x2="82.7" y2="173.3" />
+                                    <line x1="32" y1="128" x2="64" y2="128" />
+                                    <line x1="60.1" y1="60.1" x2="82.7" y2="82.7" />
+                                </svg>
+                            </span>
+                            {#if iconConfig}
+                                <span
+                                    class={cn(
+                                        "vs-icon absolute inset-0 flex items-center justify-center transition-[transform,opacity] duration-200 ease-out scale-90 opacity-0",
+                                        !isLoading && "scale-100 opacity-100",
+                                    )}
+                                    aria-hidden="true"
+                                >
+                                    <svg
+                                        viewBox={iconConfig.viewBox}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        {#each iconConfig.elements as element, elementIndex (elementIndex)}
+                                            {#if element.tag === "path"}
+                                                <path d={element.d} />
+                                            {:else if element.tag === "line"}
+                                                <line
+                                                    x1={element.x1}
+                                                    y1={element.y1}
+                                                    x2={element.x2}
+                                                    y2={element.y2}
+                                                />
+                                            {:else if element.tag === "circle"}
+                                                <circle
+                                                    cx={element.cx}
+                                                    cy={element.cy}
+                                                    r={element.r}
+                                                />
+                                            {/if}
+                                        {/each}
+                                    </svg>
+                                </span>
+                            {/if}
+                        </span>
+                    {/if}
+                    <div class="min-w-0">
+                        {#if title}
+                            <div
+                                id={titleId}
+                                class="mb-1 text-sm leading-none font-medium select-none"
+                            >
+                                {title}
+                            </div>
+                        {/if}
+                        {#if description}
+                            <div
+                                id={descriptionId}
+                                class="text-sm leading-snug text-vs-foreground/70 text-balance select-none"
+                            >
+                                {description}
+                            </div>
+                        {/if}
+                        {#if action}
+                            <div class="mt-3">
+                                <button
+                                    type="button"
+                                    onclick={() => {
+                                        action.onClick();
+                                        handleClose();
+                                    }}
+                                    class="relative inline-flex cursor-pointer items-center justify-center rounded-vs-md px-3 py-1.5 text-sm font-medium bg-vs-foreground text-vs-popover shadow-vs-button transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-offset-vs-ring-offset/50 focus-visible:outline-none focus-visible:ring-vs-ring/50"
+                                >
+                                    {action.label}
+                                </button>
+                            </div>
+                        {/if}
                     </div>
-                {/if}
-                {#if description}
-                    <div
-                        id={descriptionId}
-                        class="text-sm leading-snug text-vs-foreground/70 text-balance select-none"
-                    >
-                        {description}
-                    </div>
-                {/if}
-                {#if action}
-                    <div class="mt-3">
-                        <button
-                            type="button"
-                            onclick={() => {
-                                action.onClick();
-                                handleClose();
-                            }}
-                            class="relative inline-flex cursor-pointer items-center justify-center rounded-vs-md px-3 py-1.5 text-sm font-medium bg-vs-foreground text-vs-popover shadow-vs-button transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-offset-vs-ring-offset/50 focus-visible:outline-none focus-visible:ring-vs-ring/50"
-                        >
-                            {action.label}
-                        </button>
-                    </div>
-                {/if}
+                </div>
             </div>
         </div>
     </div>

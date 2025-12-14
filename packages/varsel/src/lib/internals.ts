@@ -226,6 +226,7 @@ export interface ToastData extends VariantProps<typeof toastContainerVariants> {
 	description?: string;
 	className?: string;
 	duration?: number;
+	isLoading?: boolean;
 	action?: {
 		label: string;
 		onClick: () => void;
@@ -240,15 +241,47 @@ export type ToastInvoker = {
 	success: (data: Omit<ToastData, "id" | "variant"> | string) => string;
 	warning: (data: Omit<ToastData, "id" | "variant"> | string) => string;
 	error: (data: Omit<ToastData, "id" | "variant"> | string) => string;
+	promise: <T, E = unknown>(
+		promise: PromiseLike<T>,
+		options: ToastPromiseOptions<T, E>,
+	) => string;
 	dismiss: (id: string) => void;
 	dismissAll: () => void;
 };
 
-const createToast: ToastInvoker = ((data: Omit<ToastData, "id"> | string) => {
+type PromiseToastState<Value> =
+	| string
+	| Omit<ToastData, "id">
+	| ((
+			value: Value,
+		) => string | Omit<ToastData, "id"> | PromiseLike<string | Omit<ToastData, "id">>);
+
+export type ToastPromiseOptions<SuccessValue = unknown, ErrorValue = unknown> = {
+	loading: Omit<ToastData, "id"> | string;
+	success: PromiseToastState<SuccessValue>;
+	error: PromiseToastState<ErrorValue>;
+};
+
+const normalizeToastData = (
+	data: Omit<ToastData, "id"> | string,
+): Omit<ToastData, "id"> => {
 	if (typeof data === "string") {
-		return toastState.add({ description: data });
+		return { description: data };
 	}
-	return toastState.add(data);
+	return data;
+};
+
+const resolvePromiseState = async <Value>(
+	value: Value,
+	state: PromiseToastState<Value>,
+): Promise<Omit<ToastData, "id">> => {
+	const resolved =
+		typeof state === "function" ? await state(value) : await state;
+	return normalizeToastData(resolved);
+};
+
+const createToast: ToastInvoker = ((data: Omit<ToastData, "id"> | string) => {
+	return toastState.add(normalizeToastData(data));
 }) as ToastInvoker;
 
 createToast.success = (
@@ -276,6 +309,43 @@ createToast.error = (
 		return toastState.add({ description: data, variant: "destructive" });
 	}
 	return toastState.add({ ...data, variant: "destructive" });
+};
+
+createToast.promise = <T, E = unknown>(
+	promise: PromiseLike<T>,
+	options: ToastPromiseOptions<T, E>,
+): string => {
+	const loadingData = normalizeToastData(options.loading);
+	const toastId = toastState.add({
+		...loadingData,
+		duration: loadingData.duration ?? 0,
+		isLoading: true,
+	});
+
+	const handleResult = async <Value>(
+		state: PromiseToastState<Value>,
+		value: Value,
+		defaultVariant?: ToastData["variant"],
+	) => {
+		const payload = await resolvePromiseState(value, state);
+		toastState.update(toastId, {
+			...payload,
+			isLoading: false,
+			duration: payload.duration,
+			variant: payload.variant ?? defaultVariant,
+		});
+	};
+
+	Promise.resolve(promise)
+		.then(async (value) => {
+			await handleResult(options.success, value, "success");
+			return value;
+		})
+		.catch(async (error: E) => {
+			await handleResult(options.error, error, "destructive");
+		});
+
+	return toastId;
 };
 
 createToast.dismiss = (id: string): void => {

@@ -2,7 +2,7 @@
 	<div class="flex flex-col gap-4 max-w-2xl text-center">
 		<div class="relative flex items-center justify-center">
 			<svg
-				class="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-[220px] w-auto"
+				class="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-55 w-auto"
 				viewBox="-10 -10 513 272"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"

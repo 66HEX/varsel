@@ -8,4 +8,5 @@ export type {
 	SwipeDirection,
 	PositionedToast,
 	VarselItemContext,
+	ToastPromiseOptions,
 } from "./internals";

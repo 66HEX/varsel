@@ -33,6 +33,10 @@ export const docNavGroups: DocNavGroup[] = [
 				title: "Actions & callbacks",
 				href: "/docs/actions",
 			},
+			{
+				title: "Promises & async",
+				href: "/docs/promises",
+			},
 		],
 	},
 	{

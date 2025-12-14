@@ -1,0 +1,152 @@
+<script lang="ts">
+import { toast } from "varsel";
+
+const mockDeploy = (shouldFail = false) =>
+	new Promise<string>((resolve, reject) => {
+		const latency = 1200 + Math.random() * 800;
+		setTimeout(() => {
+			if (shouldFail) {
+				reject(new Error("API timed out while provisioning."));
+				return;
+			}
+			resolve("Production now serves build #542.");
+		}, latency);
+	});
+
+const runDeployment = (shouldFail = false) => {
+	const deployPromise = mockDeploy(shouldFail);
+	toast.promise(deployPromise, {
+		loading: {
+			title: "Deploying build",
+			description: "Packing assets and running health checks…",
+		},
+		success: (message) => ({
+			title: "Deployment complete",
+			description: message,
+			variant: "success",
+		}),
+		error: (error) => ({
+			title: "Deployment failed",
+			description:
+				error instanceof Error
+					? error.message
+					: "Something went wrong while talking to the server.",
+		}),
+	});
+	return deployPromise;
+};
+</script>
+
+<svelte:head><title>Varsel docs — Promises & async</title></svelte:head>
+
+# Promises & async
+
+Not every action finishes instantly. `toast.promise` keeps people informed while an async task runs, automatically showing a spinner and swapping the copy once the work resolves or fails.
+
+## Use `toast.promise`
+
+Pass any `Promise` and describe the text for each state. Varsel pins the toast open (duration `0`) while it is loading, renders a spinner beside the copy and then restores the normal timer once the promise settles.
+
+```svelte
+<script lang="ts">
+	import { toast } from "varsel";
+
+	const deploy = async () => {
+		const request = fetch("/deploy");
+		toast.promise(request, {
+			loading: {
+				title: "Deploying build",
+				description: "Packing assets and running health checks…",
+			},
+			success: (response) => ({
+				title: "Deployment complete",
+				description: "Production now serves build #" + response.id,
+				variant: "success",
+			}),
+			error: (error) => ({
+				title: "Deployment failed",
+				description:
+					error instanceof Error ? error.message : "Unknown error.",
+			}),
+		});
+
+		return request;
+	};
+</script>
+
+<button class="rounded-md bg-foreground h-9 px-4 py-2 text-sm font-medium text-foreground-invert hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]" onclick={deploy}>
+	Run deploy
+</button>
+```
+
+<div class="my-4 flex flex-wrap gap-3">
+	<button
+		type="button"
+		class="rounded-md bg-foreground px-4 py-2 h-9 text-sm font-medium text-foreground-invert shadow-sm hover:bg-foreground/80 transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={() => runDeployment(false)}
+	>
+		Simulate success
+	</button>
+	<button
+		type="button"
+		class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={() => runDeployment(true)}
+	>
+		Simulate failure
+	</button>
+</div>
+
+`toast.promise` returns the toast id, so you can still dismiss or update it manually if the user cancels the job.
+
+## Customize each state
+
+Each `loading`, `success` and `error` entry accepts either a short string or a full toast object. The `success`/`error` entries can also be functions that receive the resolved value (or the thrown error) so you can surface details from the response. Any field is fair game: variants, durations, actions, etc.
+
+```ts
+const id = toast.promise(uploadFiles(), {
+	loading: "Uploading assets…",
+	success: ({ fileCount }) => ({
+		title: "Upload finished",
+		description: `Copied ${fileCount} files to the CDN.`,
+		duration: 7000,
+	}),
+	error: (error) => ({
+		title: "Upload failed",
+		description: error instanceof Error ? error.message : "Unknown error.",
+		variant: "destructive",
+	}),
+});
+```
+
+## Manual loading toasts
+
+Already own the promise lifecycle elsewhere? You can still opt into the spinner by setting `isLoading: true` on a toast yourself. Pair it with `duration: 0` so it sticks around until you update or dismiss it later.
+
+```ts
+const handleSync = async () => {
+	const id = toast({
+		title: "Syncing subscriptions",
+		description: "This may take a minute.",
+		isLoading: true,
+		duration: 0,
+	});
+
+	try {
+		await syncSubscriptions();
+		toast.success({
+			title: "Sync complete",
+			description: "All subscriptions are up to date.",
+		});
+	} catch (error) {
+		toast.error({
+			title: "Sync failed",
+			description:
+				error instanceof Error ? error.message : "Please try again.",
+		});
+	} finally {
+		toast.dismiss(id);
+	}
+};
+```
+
+Most apps can rely on `toast.promise`, but the manual escape hatch is there if you need full control over the lifecycle timing.
