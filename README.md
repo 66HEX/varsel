@@ -13,8 +13,6 @@ Varsel is a headless yet opinionated toast system for Svelte apps. This monorepo
 - **Actions & lifecycle hooks** – attach a single action button, pause timers on focus/hover, and run `onClose` callbacks after exit.
 - **Promise helpers** – `toast.promise` keeps people informed while async work is running, complete with spinner states.
 
-The package ships Tailwind CSS v4 directives and design tokens inside `varsel/styles.css`. That file already declares `@source "./**/*.{svelte,js}"`, so Tailwind picks up Varsel’s class usage automatically—just ensure your build processes CSS imported from `node_modules/varsel`.
-
 ## Repo structure
 
 | Path | Description |
@@ -60,4 +58,4 @@ Run `bun run dev` and visit the `/docs` section to explore these pages interacti
 
 ## License
 
-MIT © Varsel Contributors
+MIT © Marek Jóźwiak
