@@ -38,14 +38,14 @@
 
 :root { view-transition-name: none; }
 
-::view-transition-old(docs-content),
-::view-transition-new(docs-content) {
+::view-transition-old(homepage-content),
+::view-transition-new(homepage-content) {
   animation-duration: 150ms;
   animation-timing-function: ease-out;
 }
 
-::view-transition-old(docs-content) { animation-name: vt-fade-out; }
-::view-transition-new(docs-content) { animation-name: vt-fade-in; }
+::view-transition-old(homepage-content) { animation-name: vt-fade-out; }
+::view-transition-new(homepage-content) { animation-name: vt-fade-in; }
 
 @keyframes vt-fade-out { to { opacity: 0; } }
 @keyframes vt-fade-in  { from { opacity: 0; } }

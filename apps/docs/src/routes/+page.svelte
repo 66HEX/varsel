@@ -2,7 +2,7 @@
 import logoMark from "$lib/assets/vector.png";
 </script>
 
-<main style="view-transition-name: docs-content" class="h-screen w-screen flex flex-col gap-8 items-center justify-center bg-background px-4">
+<main style="view-transition-name: homepage-content" class="h-screen w-screen flex flex-col gap-8 items-center justify-center bg-background px-4">
 	<div class="flex flex-col gap-4 max-w-2xl text-center">
 		<div class="relative flex items-center justify-center">
 			<img
