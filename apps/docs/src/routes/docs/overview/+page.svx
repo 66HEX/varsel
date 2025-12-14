@@ -110,7 +110,7 @@ When you only need a quick notification, you can call `toast("Saved draft")`. Va
 	{#each helperExamples as example}
 		<button
 			type="button"
-			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
 			onclick={example.handler}
 		>
 			{example.label}

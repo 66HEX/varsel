@@ -31,7 +31,7 @@ Set the `variant` property when invoking `toast`. Available values are `default`
 <div class="flex flex-wrap gap-3">
 	{#each variants as variant}
 		<button
-			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
 			onclick={() =>
 				toast({
 					title: `${variant} toast`,
@@ -49,7 +49,7 @@ Set the `variant` property when invoking `toast`. Available values are `default`
 	{#each variantOptions as variant}
 		<button
 			type="button"
-			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground/70 hover:bg-card-muted transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+			class="rounded-md bg-card border border-border h-9 px-4 py-2 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
 			onclick={() => triggerVariant(variant)}
 		>
 			Try {variant}
