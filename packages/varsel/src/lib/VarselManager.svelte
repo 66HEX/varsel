@@ -23,6 +23,9 @@ const createPositionMap = <T>(value: () => T): Record<ToastPosition, T> => ({
 
 let heights: Record<string, number> = {};
 let hovered: Record<ToastPosition, boolean> = createPositionMap(() => false);
+let heldToasts: Record<ToastPosition, Set<string>> = createPositionMap(
+	() => new Set<string>(),
+);
 let previousStackIndex: Record<string, number> = {};
 let previousCollapsedOffsets: Record<string, number> = {};
 let previousExpandedOffsets: Record<string, number> = {};
@@ -43,6 +46,23 @@ let latestHovered: Record<ToastPosition, boolean> = hovered;
 
 $: latestPositionEntries = positionEntries;
 $: latestHovered = hovered;
+
+const updateHoldState = (
+	position: ToastPosition,
+	toastId: string,
+	isHolding: boolean,
+) => {
+	const current = heldToasts[position] ?? new Set<string>();
+	const next = new Set(current);
+	if (isHolding) {
+		next.add(toastId);
+	} else {
+		next.delete(toastId);
+	}
+	if (next.size !== current.size) {
+		heldToasts = { ...heldToasts, [position]: next };
+	}
+};
 
 $: {
 	const grouped = createPositionMap<ToastData[]>(() => []);
@@ -321,6 +341,8 @@ const handleHeightChange = (id: string, height: number) => {
 			{@const expandedOffsets = expandedOffsetData.byPosition[pos]}
 			{@const collapsedOffsets = collapsedOffsetData.byPosition[pos]}
 			{@const isHovered = hovered[pos]}
+			{@const isHeld = (heldToasts[pos]?.size ?? 0) > 0}
+			{@const isGroupActive = isHovered || isHeld}
 			{@const activeToasts = positionToasts.filter((toast) => !toast.shouldClose)}
 			{@const visibleStackLimit = Math.max(ANIMATION_CONFIG.MAX_VISIBLE_TOASTS - 1, 0)}
 			{@const maxVisibleStackIndex = Math.min(
@@ -347,13 +369,15 @@ const handleHeightChange = (id: string, height: number) => {
 				<VarselItem
 					{toast}
 					{onRemove}
-					isGroupHovered={isHovered}
+					isGroupHovered={isGroupActive}
 					expandedOffset={expandedOffsets?.[idx] ?? 0}
 					{expandedGap}
 					onHeightChange={handleHeightChange}
 					onGroupHoverEnter={() => {
 						hovered = { ...hovered, [pos]: true };
 					}}
+					onGroupHoldChange={(holding) =>
+						updateHoldState(pos, toast.id, holding)}
 					collapsedOffset={collapsedOffsetValue}
 					hiddenCollapsedOffset={hiddenCollapsedOffset}
 				/>

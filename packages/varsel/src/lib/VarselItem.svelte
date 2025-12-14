@@ -28,6 +28,9 @@ export let hiddenCollapsedOffset: number | undefined = undefined;
 export let onHeightChange: ((id: string, height: number) => void) | undefined =
 	undefined;
 export let onGroupHoverEnter: (() => void) | undefined = undefined;
+export let onGroupHoldChange:
+	| ((holding: boolean) => void)
+	| undefined = undefined;
 
 let toastRef: HTMLDivElement | null = null;
 let isItemHovered = false;
@@ -52,6 +55,7 @@ let previousDuration: number | undefined;
 let isExiting = false;
 let exitAnimationComplete = false;
 let hasAnimatedIn = false;
+let isPointerHeld = false;
 
 let id: string;
 let title: string | undefined;
@@ -153,6 +157,10 @@ onDestroy(() => {
 	if (timeoutRef) clearTimeout(timeoutRef);
 	if (focusTimeout) clearTimeout(focusTimeout);
 	resizeCleanup?.();
+	if (isPointerHeld) {
+		isPointerHeld = false;
+		onGroupHoldChange?.(false);
+	}
 });
 
 $: if (mounted && duration !== previousDuration) {
@@ -281,6 +289,10 @@ const handlePointerDown = (event: PointerEvent) => {
 	}
 	swipeDismissDirection = null;
 	isSwiping = true;
+	if (!isPointerHeld) {
+		isPointerHeld = true;
+		onGroupHoldChange?.(true);
+	}
 	const currentTarget = event.currentTarget as HTMLElement | null;
 	currentTarget?.setPointerCapture(event.pointerId);
 };
@@ -395,6 +407,10 @@ const handlePointerUp = (event: PointerEvent) => {
 
 	isSwiping = false;
 	clearSwipeRefs();
+	if (isPointerHeld) {
+		isPointerHeld = false;
+		onGroupHoldChange?.(false);
+	}
 };
 
 const handlePointerCancel = (event: PointerEvent) => {
@@ -405,6 +421,10 @@ const handlePointerCancel = (event: PointerEvent) => {
 	swipeDismissDirection = null;
 	isSwiping = false;
 	clearSwipeRefs();
+	if (isPointerHeld) {
+		isPointerHeld = false;
+		onGroupHoldChange?.(false);
+	}
 };
 
 const zIndexBase = Number(ANIMATION_CONFIG.Z_INDEX_BASE);
