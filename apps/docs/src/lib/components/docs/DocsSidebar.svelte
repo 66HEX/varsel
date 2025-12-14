@@ -116,13 +116,13 @@ onMount(() => {
 		<div
 			id="docs-sidebar-content"
 			class={cn(
-				"grid flex-1 w-full overflow-hidden transition-[grid-template-rows] duration-300 ease-out lg:mt-6 lg:block lg:grid-rows-[1fr] lg:overflow-visible",
+				"grid flex-1 w-full overflow-hidden transition-[grid-template-rows] duration-200 ease-out lg:mt-6 lg:block lg:grid-rows-[1fr] lg:overflow-visible",
 				isMobileNavOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
 			)}
 		>
 				<div
 					class={cn(
-						"flex flex-1 flex-col overflow-hidden transition-opacity duration-200 ease-out lg:h-full lg:pt-0 lg:overflow-visible lg:opacity-100 lg:pointer-events-auto",
+						"flex flex-1 flex-col overflow-hidden transition-opacity duration-150 ease-out lg:h-full lg:pt-0 lg:overflow-visible lg:opacity-100 lg:pointer-events-auto",
 						isMobileNavOpen ? "opacity-100" : "opacity-0 pointer-events-none",
 					)}
 				>
