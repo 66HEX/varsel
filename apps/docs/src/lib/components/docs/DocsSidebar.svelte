@@ -67,7 +67,7 @@ onMount(() => {
 });
 </script>
 
-<aside class="flex w-full flex-col border-b border-border bg-card p-4 lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r">
+<aside class="flex w-full flex-col border-b border-border bg-card p-4 lg:fixed lg:top-0 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r">
 	<div class="flex items-center justify-between gap-2">
 		<a href="/" class="flex items-center gap-2 px-2 text-foreground">
 	    	<svg
