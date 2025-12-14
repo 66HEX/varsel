@@ -1,3 +1,5 @@
+![Varsel toast showcase banner](apps/docs/static/og-image.jpg)
+
 # Varsel
 
 Varsel is a headless yet opinionated toast system for Svelte apps. This monorepo contains the publishable UI package plus the interactive documentation site that showcases every feature.
