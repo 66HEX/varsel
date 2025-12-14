@@ -119,41 +119,6 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 	--ease-vs-button: var(--ease-vs-button);
 	--ease-vs-toast: var(--ease-vs-toast);
 }
-
-.vs-spinner {
-	display: inline-flex;
-	width: 1rem;
-	height: 1rem;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-}
-
-.vs-spinner svg {
-	width: 100%;
-	height: 100%;
-	animation: vs-spin 1s linear infinite;
-}
-
-.vs-icon {
-	display: inline-flex;
-	width: 1rem;
-	height: 1rem;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-}
-
-.vs-icon svg {
-	width: 100%;
-	height: 100%;
-}
-
-@keyframes vs-spin {
-	to {
-		transform: rotate(360deg);
-	}
-}
 ```
 
 Override any of these values (for example swap the hue or easing curves) to give Varsel a custom feel while keeping the component API the same. If you do include the packaged CSS, your overrides still win thanks to normal cascade rules.

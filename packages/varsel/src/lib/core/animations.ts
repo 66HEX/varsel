@@ -1,0 +1,13 @@
+export const ANIMATION_CONFIG = {
+	ENTER_DURATION: 0.75,
+	EXIT_DURATION: 0.75,
+	STACK_DURATION: 0.75,
+	STACK_OFFSET: 16,
+	EXPANDED_GAP: 12,
+	SCALE_FACTOR: 0.04,
+	MIN_SCALE: 0.92,
+	MAX_VISIBLE_TOASTS: 3,
+	Z_INDEX_BASE: 50,
+	EASING_DEFAULT: "var(--ease-vs-toast)",
+	EASING_EXIT: "var(--ease-vs-toast)",
+} as const;
