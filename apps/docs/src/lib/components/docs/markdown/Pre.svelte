@@ -24,10 +24,13 @@ const restProps = $derived(() => {
 <div
 	{...restProps}
 	class={cn(
-		"group/pre relative mt-8 overflow-x-auto rounded-md border border-border bg-card p-4 font-mono text-sm text-foreground",
+		"group/pre relative mt-8 rounded-md border border-border bg-card p-4 font-mono text-sm text-foreground",
 		className,
 	)}
 >
+	<div class="overflow-x-auto">
+		{@render children?.()}
+	</div>
 	{#if code}
 		<div class="pointer-events-none absolute right-2 top-2">
 			<CopyCodeButton
@@ -36,7 +39,6 @@ const restProps = $derived(() => {
 			/>
 		</div>
 	{/if}
-	{@render children?.()}
 </div>
 
 <style>
