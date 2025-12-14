@@ -30,7 +30,7 @@ const nextLink = $derived(
 	<div class="flex min-h-screen w-full flex-col lg:flex-row lg:items-start">
 		<DocsSidebar links={docNavGroups} />
 
-		<section class="flex-1 px-4 pb-10 pt-4 lg:px-12 lg:pb-12 lg:pt-10 lg:ml-64">
+		<section class="flex-1 px-4 pb-10 pt-24 lg:px-12 lg:pb-12 lg:pt-10 lg:ml-64">
 			<div class="mx-auto flex w-full max-w-6xl gap-10">
 				<article
 					class="min-w-0 flex-1 max-w-3xl"
