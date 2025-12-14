@@ -65,6 +65,17 @@
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
+	position: absolute;
+	inset: 0;
+	transform-origin: center;
+}
+
+.vs-spinner--active {
+	opacity: 1;
+}
+
+.vs-spinner--finish {
+	animation: vs-spinner-finish 0.42s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 .vs-spinner svg {
@@ -80,6 +91,22 @@
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
+	position: absolute;
+	inset: 0;
+}
+
+.vs-icon--static {
+	opacity: 1;
+	transform: scale(1);
+}
+
+.vs-icon--waiting {
+	opacity: 0;
+	transform: scale(0.75) rotate(-6deg);
+}
+
+.vs-icon--pop {
+	animation: vs-icon-pop 0.36s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
 }
 
 .vs-icon svg {
@@ -90,5 +117,57 @@
 @keyframes vs-spin {
 	to {
 		transform: rotate(360deg);
+	}
+}
+
+@keyframes vs-spinner-finish {
+	0% {
+		opacity: 1;
+		transform: scale(1) rotate(0deg);
+		filter: blur(0);
+	}
+	60% {
+		opacity: 0.65;
+		transform: scale(0.55) rotate(140deg);
+		filter: blur(0.3px);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(0) rotate(220deg);
+		filter: blur(0.8px);
+	}
+}
+
+@keyframes vs-icon-pop {
+	0% {
+		opacity: 0;
+		transform: scale(0.5) rotate(-10deg);
+		filter: blur(2px);
+	}
+	60% {
+		opacity: 1;
+		transform: scale(1.18) rotate(2deg);
+		filter: blur(0);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1) rotate(0deg);
+		filter: blur(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.vs-spinner svg {
+		animation-duration: 2s;
+	}
+
+	.vs-spinner--finish {
+		animation-duration: 0s;
+	}
+
+	.vs-icon--pop {
+		animation: none;
+		opacity: 1;
+		transform: scale(1);
 	}
 }

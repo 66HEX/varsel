@@ -63,6 +63,12 @@ let hasAnimatedIn = false;
 let isPointerHeld = false;
 let iconConfig: VariantIconDefinition | undefined;
 let showStatusIcon = false;
+type SpinnerState = "hidden" | "loading" | "finishing";
+let spinnerState: SpinnerState = "hidden";
+let spinnerFinishTimer: ReturnType<typeof setTimeout> | null = null;
+let shouldRenderSpinner = false;
+let hasShownSpinner = false;
+let iconStateClass: string | undefined;
 
 let id: string;
 let title: string | undefined;
@@ -91,10 +97,52 @@ $: ({
 	renderIndex,
 	shouldClose,
 		position = "bottom-center",
-		className = "",
-		onClose,
-		showClose = true,
-	} = toast);
+	className = "",
+	onClose,
+	showClose = true,
+} = toast);
+
+$: if (isLoading) {
+	hasShownSpinner = true;
+}
+
+$: {
+	if (isLoading) {
+		spinnerState = "loading";
+	} else if (spinnerState === "loading") {
+		spinnerState = "finishing";
+	}
+}
+
+$: {
+	if (spinnerState === "finishing") {
+		if (!spinnerFinishTimer) {
+			spinnerFinishTimer = setTimeout(() => {
+				spinnerState = "hidden";
+				spinnerFinishTimer = null;
+			}, 420);
+		}
+	} else if (spinnerFinishTimer) {
+		clearTimeout(spinnerFinishTimer);
+		spinnerFinishTimer = null;
+	}
+}
+
+$: shouldRenderSpinner = spinnerState !== "hidden";
+
+const handleSpinnerAnimationEnd = (event: AnimationEvent) => {
+	if (event.animationName !== "vs-spinner-finish") return;
+	spinnerState = "hidden";
+};
+
+$: iconStateClass =
+	!iconConfig
+		? undefined
+		: !hasShownSpinner
+			? "vs-icon--static"
+			: isLoading
+				? "vs-icon--waiting"
+				: "vs-icon--pop";
 
 const clearSwipeRefs = () => {
 	pointerStart = null;
@@ -168,6 +216,10 @@ onDestroy(() => {
 	if (timeoutRef) clearTimeout(timeoutRef);
 	if (focusTimeout) clearTimeout(focusTimeout);
 	resizeCleanup?.();
+	if (spinnerFinishTimer) {
+		clearTimeout(spinnerFinishTimer);
+		spinnerFinishTimer = null;
+	}
 	if (isPointerHeld) {
 		isPointerHeld = false;
 		onGroupHoldChange?.(false);
@@ -713,37 +765,43 @@ const handleBlurCapture = (event: FocusEvent) => {
                 <div class="flex gap-3">
                     {#if showStatusIcon}
                         <span class="relative inline-flex h-4 w-4 shrink-0 items-center justify-center">
-                            <span
-                                class={cn(
-                                    "vs-spinner absolute inset-0 transition-[transform,opacity] duration-200 ease-out scale-100 opacity-100",
-                                    !isLoading && "scale-0 opacity-0",
-                                )}
-                                role="status"
-                                aria-label="Loading..."
-                            >
-                                <svg
-                                    viewBox="0 0 256 256"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="24"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                            {#if shouldRenderSpinner}
+                                <span
+                                    class={cn(
+                                        "vs-spinner absolute inset-0",
+                                        spinnerState === "loading"
+                                            ? "vs-spinner--active"
+                                            : "vs-spinner--finish",
+                                    )}
+                                    role={spinnerState === "loading" ? "status" : undefined}
+                                    aria-label={spinnerState === "loading" ? "Loading..." : undefined}
+                                    aria-live={spinnerState === "loading" ? "assertive" : undefined}
+                                    onanimationend={handleSpinnerAnimationEnd}
                                 >
-                                    <line x1="128" y1="32" x2="128" y2="64" />
-                                    <line x1="195.9" y1="60.1" x2="173.3" y2="82.7" />
-                                    <line x1="224" y1="128" x2="192" y2="128" />
-                                    <line x1="195.9" y1="195.9" x2="173.3" y2="173.3" />
-                                    <line x1="128" y1="224" x2="128" y2="192" />
-                                    <line x1="60.1" y1="195.9" x2="82.7" y2="173.3" />
-                                    <line x1="32" y1="128" x2="64" y2="128" />
-                                    <line x1="60.1" y1="60.1" x2="82.7" y2="82.7" />
-                                </svg>
-                            </span>
+                                    <svg
+                                        viewBox="0 0 256 256"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="24"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <line x1="128" y1="32" x2="128" y2="64" />
+                                        <line x1="195.9" y1="60.1" x2="173.3" y2="82.7" />
+                                        <line x1="224" y1="128" x2="192" y2="128" />
+                                        <line x1="195.9" y1="195.9" x2="173.3" y2="173.3" />
+                                        <line x1="128" y1="224" x2="128" y2="192" />
+                                        <line x1="60.1" y1="195.9" x2="82.7" y2="173.3" />
+                                        <line x1="32" y1="128" x2="64" y2="128" />
+                                        <line x1="60.1" y1="60.1" x2="82.7" y2="82.7" />
+                                    </svg>
+                                </span>
+                            {/if}
                             {#if iconConfig}
                                 <span
                                     class={cn(
-                                        "vs-icon absolute inset-0 flex items-center justify-center transition-[transform,opacity] duration-200 ease-out scale-90 opacity-0",
-                                        !isLoading && "scale-100 opacity-100",
+                                        "vs-icon absolute inset-0 flex items-center justify-center",
+                                        iconStateClass,
                                     )}
                                     aria-hidden="true"
                                 >
