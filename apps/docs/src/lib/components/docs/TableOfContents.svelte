@@ -270,7 +270,7 @@ $effect(() => {
 						<a
 							href={`#${heading.id}`}
 							class={cn(
-								"block px-3 py-1 hover:text-foreground transition-[color] duration-150 ease-out",
+								"block px-3 py-1 hover:text-foreground font-normal transition-[color] duration-150 ease-out",
 								heading.level > 2 && "pl-6 text-xs",
 								activeId === heading.id
 									? "text-foreground"

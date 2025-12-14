@@ -14,7 +14,7 @@ let { children, class: className = "", ...restProps }: ComponentProps = $props()
 <p
 	{...restProps}
 	class={cn(
-		"mt-4 text-sm leading-relaxed text-foreground/70 first:mt-0",
+		"mt-4 text-base leading-relaxed text-foreground/70 first:mt-0",
 		className,
 	)}
 >

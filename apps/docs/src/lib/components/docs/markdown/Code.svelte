@@ -26,7 +26,7 @@ const isBlock = (
 	class={cn(
 		isBlock(typeof className === "string" ? className : undefined, restProps["data-theme"])
 			? "block whitespace-pre font-mono text-sm leading-relaxed"
-			: "rounded bg-card border border-border px-1.5 py-0.5 font-mono text-sm text-foreground",
+			: "rounded bg-card border border-border px-1.5 py-0.5 font-mono text-sm text-foreground font-normal",
 		className,
 	)}
 >

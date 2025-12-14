@@ -75,7 +75,7 @@ html.theme-vt ::view-transition-new(root) {
 
 @layer base {
   body {
-    @apply bg-background font-sans text-foreground;
+    @apply bg-background font-sans text-foreground font-light;
   }
 
   p {
