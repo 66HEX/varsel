@@ -645,9 +645,9 @@ const handleBlurCapture = (event: FocusEvent) => {
         <div class={cn(toastContentVariants({ variant }))}>
             <button
                 type="button"
-                on:click={handleClose}
+                onclick={handleClose}
                 class={cn(
-                    "absolute top-2 right-2 cursor-pointer rounded-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
+                    "absolute top-2 right-2 cursor-pointer rounded-vs-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
                 )}
                 aria-label="Close toast"
             >
@@ -687,11 +687,11 @@ const handleBlurCapture = (event: FocusEvent) => {
                     <div class="mt-3">
                         <button
                             type="button"
-                            on:click={() => {
+                            onclick={() => {
                                 action.onClick();
                                 handleClose();
                             }}
-                            class="relative inline-flex cursor-pointer items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium bg-vs-foreground text-vs-popover shadow-vs-button transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-offset-vs-ring-offset/50 focus-visible:outline-none focus-visible:ring-vs-ring/50"
+                            class="relative inline-flex cursor-pointer items-center justify-center rounded-vs-md px-3 py-1.5 text-sm font-medium bg-vs-foreground text-vs-popover shadow-vs-button transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-offset-vs-ring-offset/50 focus-visible:outline-none focus-visible:ring-vs-ring/50"
                         >
                             {action.label}
                         </button>
