@@ -25,7 +25,7 @@
 		"lint": "tsc -p tsconfig.json --noEmit"
 	},
 	"dependencies": {
-		"class-variance-authority": "^0.7.0"
+		"class-variance-authority": "^0.7.1"
 	},
 	"peerDependencies": {
 		"svelte": "^5.46.0",

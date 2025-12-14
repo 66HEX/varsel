@@ -32,7 +32,7 @@
       "name": "varsel",
       "version": "0.0.0",
       "dependencies": {
-        "class-variance-authority": "^0.7.0",
+        "class-variance-authority": "^0.7.1",
       },
       "devDependencies": {
         "@biomejs/biome": "2.3.8",
