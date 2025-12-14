@@ -82,15 +82,15 @@ onMount(() => {
 
 	<div class="mt-4 flex items-center justify-between gap-2 border-t border-border pt-4">
 		<a
-			class="inline-flex size-8 items-center justify-center rounded-md text-foreground/70 hover:text-foreground transition-[color] duration-150 ease-out"
+			class="inline-flex p-0.5 items-center justify-center rounded-sm text-foreground/70 hover:text-foreground transition-[color] duration-150 ease-out"
 			href="https://github.com/hex/varsel"
 			target="_blank"
 			rel="noreferrer"
 			aria-label="Varsel on GitHub"
 		>
 			<svg
-				width="22"
-				height="22"
+				width="14"
+				height="14"
 				viewBox="0 0 15 15"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
@@ -108,19 +108,19 @@ onMount(() => {
 		<button
 			type="button"
 			class={cn(
-				"relative inline-flex w-12 p-0.5 items-center rounded-md border border-border",
+				"relative inline-flex w-10 p-0.5 items-center rounded-md border border-border",
 				theme === "dark" ? "justify-end" : "justify-start",
 			)}
 			onclick={toggleTheme}
 			aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
 		>
 			<span
-				class="flex size-5 items-center justify-center rounded-sm bg-card-muted text-foreground"
+				class="flex size-4 items-center justify-center rounded bg-card-muted text-foreground"
 			>
 				{#if theme === "dark"}
 					<svg
-						width="15"
-						height="15"
+						width="14"
+						height="14"
 						viewBox="0 0 15 15"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
@@ -130,8 +130,8 @@ onMount(() => {
 					</svg>
 				{:else}
 					<svg
-						width="15"
-						height="15"
+						width="14"
+						height="14"
 						viewBox="0 0 15 15"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
