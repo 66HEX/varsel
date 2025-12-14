@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "varsel/styles.css";
 
-@source "../../node_modules/varsel/dist/**/*.{svelte,js}";
-
 @font-face {
 	font-family: "GeistVariable";
 	src: url("../lib/assets/fonts/Geist-VF.ttf") format("truetype");

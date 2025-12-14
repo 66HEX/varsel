@@ -51,7 +51,7 @@
 		</a>
 		<a
 			class="inline-flex h-9 items-center rounded-md bg-card border border-border px-8 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
-			href="https://github.com/hex/varsel"
+			href="https://github.com/66HEX/varsel"
 			target="_blank"
 			rel="noreferrer"
 		>

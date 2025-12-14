@@ -30,7 +30,7 @@
     },
     "packages/varsel": {
       "name": "varsel",
-      "version": "0.0.0",
+      "version": "0.1.0",
       "dependencies": {
         "class-variance-authority": "^0.7.1",
       },
@@ -44,7 +44,7 @@
         "typescript": "^5.9.3",
       },
       "peerDependencies": {
-        "svelte": "^5.46.0",
+        "svelte": "^5.0.0",
         "tailwindcss": "^4.1.18",
       },
     },

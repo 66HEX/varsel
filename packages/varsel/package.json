@@ -1,8 +1,25 @@
 {
 	"name": "varsel",
-	"version": "0.0.0",
+	"version": "0.1.0",
+	"description": "Headless yet opinionated toast notifications for Svelte apps.",
 	"type": "module",
 	"license": "MIT",
+	"author": "Marek Jóźwiak",
+	"keywords": [
+		"svelte",
+		"toast",
+		"toaster",
+		"notifications",
+		"ui"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/66HEX/varsel.git"
+	},
+	"homepage": "https://github.com/66HEX/varsel#readme",
+	"bugs": {
+		"url": "https://github.com/66HEX/varsel/issues"
+	},
 	"files": [
 		"dist"
 	],
@@ -20,6 +37,7 @@
 	},
 	"scripts": {
 		"build": "svelte-package",
+		"prepublishOnly": "bun run build",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"dev": "svelte-package --watch",
 		"lint": "tsc -p tsconfig.json --noEmit"
@@ -28,7 +46,7 @@
 		"class-variance-authority": "^0.7.1"
 	},
 	"peerDependencies": {
-		"svelte": "^5.46.0",
+		"svelte": "^5.0.0",
 		"tailwindcss": "^4.1.18"
 	},
 	"devDependencies": {

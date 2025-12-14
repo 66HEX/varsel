@@ -139,13 +139,13 @@ onMount(() => {
 </script>
 
 <aside
-	class="flex w-full flex-col border-b border-border bg-card p-4 fixed lg:top-0 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r z-50 shadow-md"
+	class="flex w-full flex-col border-b border-border bg-card p-4 fixed lg:top-0 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r z-50 shadow-md md:shadow-none"
 	bind:this={sidebarElement}
 >
 	<div class="flex items-center justify-between gap-2">
 		<a href="/" class="flex items-center gap-2 px-2 text-foreground">
 	    	<svg
-	    		class="h-4 w-auto"
+	    		class="h-3 w-auto"
 	    		viewBox="0 0 493 251"
 	    		fill="none"
 	    		xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +158,7 @@ onMount(() => {
 	    			fill="currentColor"
 	    		/>
 	    	</svg>
-	    	<p class="text-lg font-medium font-mono tracking-tight">Varsel</p>
+	    	<p class="text-base font-medium font-mono tracking-tight">Varsel</p>
 		</a>
 
 		<button
@@ -224,7 +224,7 @@ onMount(() => {
 			<div class="mt-4 lg:mt-auto flex items-center justify-between gap-2 border-t border-border pt-4">
 				<a
 					class="inline-flex p-0.5 size-6 items-center justify-center rounded-sm text-foreground/70 hover:text-foreground transition-[color] duration-150 ease-out"
-					href="https://github.com/hex/varsel"
+					href="https://github.com/66HEX/varsel"
 					target="_blank"
 					rel="noreferrer"
 					aria-label="Varsel on GitHub"

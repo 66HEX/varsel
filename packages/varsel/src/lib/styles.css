@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "./**/*.{svelte,js}";
 
 :root {
 	--base-hue: 265;
