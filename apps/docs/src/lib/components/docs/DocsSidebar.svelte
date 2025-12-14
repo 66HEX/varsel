@@ -92,7 +92,7 @@ onMount(() => {
 					<a
 						href={link.href}
 						aria-current={isActive ? "page" : undefined}
-						class={`px-2 py-1 text-left rounded-sm transition-all duration-150 ease-out hover:bg-card-muted hover:text-foreground ${isActive ? "text-foreground font-medium" : "text-foreground/70"}`}
+						class={`px-2 py-1 text-left rounded-sm transition-all duration-150 ease-out hover:bg-card-muted hover:text-foreground ${isActive ? "text-foreground font-medium bg-card-muted" : "text-foreground/70"}`}
 					>
 						<span class="block text-sm font-normal">{link.title}</span>
 					</a>
