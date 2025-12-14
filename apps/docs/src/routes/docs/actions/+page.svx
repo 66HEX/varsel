@@ -23,6 +23,14 @@ const showCloseHookToast = () => {
 		},
 	});
 };
+
+const showNoCloseToast = () => {
+	toast({
+		title: "Sync in progress",
+		description: "We will close this when the job finishes.",
+		showClose: false,
+	});
+};
 </script>
 
 <svelte:head><title>Varsel docs — Actions & callbacks</title></svelte:head>
@@ -89,5 +97,27 @@ const id = toast({
 		onclick={showCloseHookToast}
 	>
 		Trigger close hook
+	</button>
+</div>
+
+## Toggle the close button
+
+The close button is enabled by default for regular toasts, but you can disable it with the `showClose` prop. When `showClose` is `false`, Varsel hides the "X" button and also disables the swipe-to-dismiss gesture, which is useful for blocking manual dismissal while a task is in progress. `toast.promise` follows this pattern automatically—its loading toast hides the close button unless you override the flag.
+
+```ts
+toast({
+	title: "Sync in progress",
+	description: "We will close this when the job finishes.",
+	showClose: false,
+});
+```
+
+<div class="my-4">
+	<button
+		type="button"
+		class="rounded-md bg-card border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
+		onclick={showNoCloseToast}
+	>
+		Hide close button
 	</button>
 </div>

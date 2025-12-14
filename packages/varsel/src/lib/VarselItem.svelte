@@ -77,6 +77,7 @@ let shouldClose: boolean | undefined;
 let position: PositionedToast["position"];
 let className: string | undefined;
 let onClose: (() => void) | undefined;
+let showClose: boolean;
 
 $: ({
 	id,
@@ -89,10 +90,11 @@ $: ({
 	index,
 	renderIndex,
 	shouldClose,
-	position = "bottom-center",
-	className = "",
-	onClose,
-} = toast);
+		position = "bottom-center",
+		className = "",
+		onClose,
+		showClose = true,
+	} = toast);
 
 const clearSwipeRefs = () => {
 	pointerStart = null;
@@ -279,10 +281,13 @@ $: if (mounted && toastRef && !isSwiping && !swipeDismissDirection) {
 	toastRef.style.setProperty("--swipe-translate-y", "0px");
 }
 
-let swipeDirections = getDefaultSwipeDirections(position);
-$: swipeDirections = getDefaultSwipeDirections(position);
+let swipeDirections: SwipeDirection[] = showClose
+	? getDefaultSwipeDirections(position)
+	: [];
+$: swipeDirections = showClose ? getDefaultSwipeDirections(position) : [];
 
 const handlePointerDown = (event: PointerEvent) => {
+	if (!showClose) return;
 	if (event.pointerType === "mouse" && event.button !== 0) return;
 	if (event.button === 2) return;
 	if (isExiting) return;
@@ -310,6 +315,7 @@ const handlePointerDown = (event: PointerEvent) => {
 };
 
 const handlePointerMove = (event: PointerEvent) => {
+	if (!showClose) return;
 	if (!pointerStart) return;
 	if (isExiting) return;
 
@@ -372,6 +378,7 @@ const handlePointerMove = (event: PointerEvent) => {
 };
 
 const handlePointerUp = (event: PointerEvent) => {
+	if (!showClose) return;
 	const currentTarget = event.currentTarget as HTMLElement | null;
 	if (currentTarget?.hasPointerCapture(event.pointerId)) {
 		currentTarget.releasePointerCapture(event.pointerId);
@@ -426,6 +433,7 @@ const handlePointerUp = (event: PointerEvent) => {
 };
 
 const handlePointerCancel = (event: PointerEvent) => {
+	if (!showClose) return;
 	const currentTarget = event.currentTarget as HTMLElement | null;
 	if (currentTarget?.hasPointerCapture(event.pointerId)) {
 		currentTarget.releasePointerCapture(event.pointerId);
@@ -493,7 +501,7 @@ let transformStyle = {
 };
 let transitionDuration = `${ANIMATION_CONFIG.ENTER_DURATION}s`;
 let transitionTimingFunction = ANIMATION_CONFIG.EASING_DEFAULT;
-let canSwipe = swipeDirections.length > 0;
+let canSwipe = showClose && swipeDirections.length > 0;
 let swipeCursorClass: string | undefined = undefined;
 let titleId: string | undefined = undefined;
 let descriptionId: string | undefined = undefined;
@@ -613,7 +621,7 @@ $: transitionTimingFunction =
 		? ANIMATION_CONFIG.EASING_EXIT
 		: ANIMATION_CONFIG.EASING_DEFAULT;
 
-$: canSwipe = swipeDirections.length > 0;
+$: canSwipe = showClose && swipeDirections.length > 0;
 $: swipeCursorClass = canSwipe
 	? isSwiping
 		? "cursor-grabbing"
@@ -676,28 +684,30 @@ const handleBlurCapture = (event: FocusEvent) => {
         onblurcapture={handleBlurCapture}
     >
         <div class={cn(toastContentVariants({ variant }))}>
-            <button
-                type="button"
-                onclick={handleClose}
-                class={cn(
-                    "absolute top-2 right-2 cursor-pointer rounded-vs-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
-                )}
-                aria-label="Close toast"
-            >
-                <svg
-                    aria-hidden="true"
-                    class="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+            {#if showClose}
+                <button
+                    type="button"
+                    onclick={handleClose}
+                    class={cn(
+                        "absolute top-2 right-2 cursor-pointer rounded-vs-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
+                    )}
+                    aria-label="Close toast"
                 >
-                    <line x1="18" x2="6" y1="6" y2="18" />
-                    <line x1="6" x2="18" y1="6" y2="18" />
-                </svg>
-            </button>
+                    <svg
+                        aria-hidden="true"
+                        class="h-4 w-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <line x1="18" x2="6" y1="6" y2="18" />
+                        <line x1="6" x2="18" y1="6" y2="18" />
+                    </svg>
+                </button>
+            {/if}
 
             <div class="p-4 pr-8">
                 <div class="flex gap-3">

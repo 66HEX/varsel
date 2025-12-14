@@ -227,6 +227,7 @@ export interface ToastData extends VariantProps<typeof toastContainerVariants> {
 	className?: string;
 	duration?: number;
 	isLoading?: boolean;
+	showClose?: boolean;
 	action?: {
 		label: string;
 		onClick: () => void;
@@ -320,6 +321,7 @@ createToast.promise = <T, E = unknown>(
 		...loadingData,
 		duration: loadingData.duration ?? 0,
 		isLoading: true,
+		showClose: loadingData.showClose ?? false,
 	});
 
 	const handleResult = async <Value>(
@@ -333,6 +335,7 @@ createToast.promise = <T, E = unknown>(
 			isLoading: false,
 			duration: payload.duration,
 			variant: payload.variant ?? defaultVariant,
+			showClose: payload.showClose ?? false,
 		});
 	};
 
