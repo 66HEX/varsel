@@ -50,10 +50,11 @@ bun add varsel
 npm install varsel
 ```
 
-Varsel includes its own design tokens. Import the stylesheet once (for example inside your root `+layout.svelte` or `app.css`) by adding:
+Varsel includes its own design tokens. Import the stylesheet once (for example inside your `app.css`) by adding:
 
 ```css
 @import "varsel/styles.css";
+@source "../../node_modules/varsel/dist/**/*.{svelte,js}";
 ```
 
 Varsel relies on Tailwind CSS for its utility classes and tokens, so Tailwind is required to render the bundled styles correctly.
