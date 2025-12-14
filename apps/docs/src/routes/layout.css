@@ -3,6 +3,13 @@
 
 @source "../../node_modules/varsel/dist/**/*.{svelte,js}";
 
+@font-face {
+	font-family: "InterVariable";
+	src: url("../lib/assets/fonts/Inter-VF.ttf") format("truetype");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
 
 :root {
 	--base-hue: 265;
@@ -27,6 +34,7 @@
 }
 
 @theme {
+    --font-sans: "InterVariable";
    	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-foreground-invert: var(--foreground-invert);
@@ -59,7 +67,11 @@ html.theme-vt ::view-transition-new(root) {
 }
 
 @layer base {
-	body {
-		@apply bg-background;
-	}
+  body {
+    @apply bg-background font-sans text-foreground;
+  }
+
+  p {
+    letter-spacing: -0.02em;
+  }
 }
