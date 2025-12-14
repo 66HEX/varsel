@@ -58,6 +58,8 @@ Varsel includes its own design tokens. Import the stylesheet once (for example i
 @import "varsel/styles.css";
 ```
 
+Varsel relies on Tailwind CSS for its utility classes and tokens, so Tailwind is required to render the bundled styles correctly.
+
 ## Mount the toaster host
 
 Render the `VarselToaster` component near the top of your tree so every route shares the same host. Varsel automatically keeps only the first host active, so it is safe to render it in layouts.
