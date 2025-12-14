@@ -624,23 +624,23 @@ const handleBlurCapture = (event: FocusEvent) => {
     aria-describedby={stackHidden ? undefined : descriptionId}
     aria-hidden={stackHidden ? true : undefined}
     tabindex="-1"
-    on:transitionend={handleTransitionEnd}
+    ontransitionend={handleTransitionEnd}
     data-toast-id={id}
 >
     <div
         role="alert"
         class={cn(swipeCursorClass)}
-        on:pointerdown={handlePointerDown}
-        on:pointermove={handlePointerMove}
-        on:pointerup={handlePointerUp}
-        on:pointercancel={handlePointerCancel}
-        on:mouseenter={() => {
+        onpointerdown={handlePointerDown}
+        onpointermove={handlePointerMove}
+        onpointerup={handlePointerUp}
+        onpointercancel={handlePointerCancel}
+        onmouseenter={() => {
             isItemHovered = true;
             onGroupHoverEnter?.();
         }}
-        on:mouseleave={() => (isItemHovered = false)}
-        on:focus|capture={() => (isItemHovered = true)}
-        on:blur|capture={handleBlurCapture}
+        onmouseleave={() => (isItemHovered = false)}
+        onfocuscapture={() => (isItemHovered = true)}
+        onblurcapture={handleBlurCapture}
     >
         <div class={cn(toastContentVariants({ variant }))}>
             <button
