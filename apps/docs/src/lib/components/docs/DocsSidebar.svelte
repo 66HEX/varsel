@@ -12,6 +12,9 @@ type ThemeMode = "light" | "dark" | "system";
 type ConcreteTheme = Exclude<ThemeMode, "system">;
 let theme = $state<ThemeMode>("system");
 let isMobileNavOpen = $state(false);
+let sidebarElement: HTMLElement | null = null;
+let desktopMediaQuery: MediaQueryList | null = null;
+let isDesktop = false;
 let systemPreference: ConcreteTheme = "light";
 
 const resolveTheme = (value: ThemeMode): ConcreteTheme =>
@@ -59,6 +62,22 @@ const toggleMobileNav = () => {
 	isMobileNavOpen = !isMobileNavOpen;
 };
 
+const handleNavLinkClick = () => {
+	if (!isDesktop) {
+		isMobileNavOpen = false;
+	}
+};
+
+const handleDocumentPointerDown = (event: PointerEvent) => {
+	if (!isMobileNavOpen || isDesktop) return;
+	if (!sidebarElement) return;
+	if (!event.target || !(event.target instanceof Node)) return;
+
+	if (!sidebarElement.contains(event.target)) {
+		isMobileNavOpen = false;
+	}
+};
+
 const getThemeButtonClasses = (mode: ThemeMode) =>
 	cn(
 		"inline-flex size-6 items-center justify-center rounded-md border transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-vs-ring/50",
@@ -79,6 +98,7 @@ onMount(() => {
 	}
 
 	mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+	desktopMediaQuery = window.matchMedia("(min-width: 1024px)");
 
 	const syncSystemPreference = (matches: boolean) => {
 		systemPreference = matches ? "dark" : "light";
@@ -87,22 +107,41 @@ onMount(() => {
 		}
 	};
 
+	const syncDesktopState = (matches: boolean) => {
+		isDesktop = matches;
+		if (isDesktop) {
+			isMobileNavOpen = false;
+		}
+	};
+
 	syncSystemPreference(mediaQuery.matches);
+	syncDesktopState(desktopMediaQuery.matches);
 
 	const handlePreferenceChange = (event: MediaQueryListEvent) => {
 		syncSystemPreference(event.matches);
 	};
 
+	const handleDesktopChange = (event: MediaQueryListEvent) => {
+		syncDesktopState(event.matches);
+	};
+
 	mediaQuery.addEventListener("change", handlePreferenceChange);
+	desktopMediaQuery.addEventListener("change", handleDesktopChange);
 	applyTheme(theme);
+	document.addEventListener("pointerdown", handleDocumentPointerDown);
 
 	return () => {
 		mediaQuery?.removeEventListener("change", handlePreferenceChange);
+		desktopMediaQuery?.removeEventListener("change", handleDesktopChange);
+		document.removeEventListener("pointerdown", handleDocumentPointerDown);
 	};
 });
 </script>
 
-<aside class="flex w-full flex-col border-b border-border bg-card p-4 fixed lg:top-0 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r z-50 shadow-md">
+<aside
+	class="flex w-full flex-col border-b border-border bg-card p-4 fixed lg:top-0 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r z-50 shadow-md"
+	bind:this={sidebarElement}
+>
 	<div class="flex items-center justify-between gap-2">
 		<a href="/" class="flex items-center gap-2 px-2 text-foreground">
 	    	<svg
@@ -173,6 +212,7 @@ onMount(() => {
 								href={link.href}
 								aria-current={isActive ? "page" : undefined}
 								class={`px-2 py-1 text-left rounded-sm transition-all duration-150 ease-out hover:bg-card-muted hover:text-foreground ${isActive ? "text-foreground font-medium bg-card-muted" : "text-foreground/70"}`}
+								onclick={handleNavLinkClick}
 							>
 								<span class="block text-sm font-normal">{link.title}</span>
 							</a>
