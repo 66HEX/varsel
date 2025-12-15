@@ -720,7 +720,7 @@ const handleBlurCapture = (event: FocusEvent) => {
 >
     <div
         role="presentation"
-        class={cn(swipeCursorClass)}
+        class={cn(swipeCursorClass, "touch-none")}
         aria-busy={isLoading ? "true" : undefined}
         onpointerdown={handlePointerDown}
         onpointermove={handlePointerMove}

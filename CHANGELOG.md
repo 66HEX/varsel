@@ -6,6 +6,16 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [unreleased] – 2025-12-15
+
+### Fixed
+
+- **Mobile Swipe Dismiss**  
+  Added `touch-action: none` to toast elements to prevent browser scrolling from interfering with swipe-to-dismiss gestures on touch devices.
+
+- **Timer Optimization**  
+  Prevented `setTimeout` execution for toasts with `duration: Infinity`, eliminating Node.js warnings during tests and reducing unnecessary timer scheduling.
+
 ## [0.2.0] – 2025-12-15
 
 ### Changed
@@ -26,7 +36,6 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   - **Interaction Tests**: Coverage for complex behaviors like stacking limits, action callbacks, and queue management.
 
 - **Performance Improvements**  
-  - Optimized timer logic for `toast.promise` and persistent toasts (removed unnecessary timeouts for `Infinity` duration).
   - Reduced reactivity overhead by leveraging fine-grained Runes.
 
 ---
