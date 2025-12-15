@@ -1,8 +1,19 @@
+/*
+ * Main stylesheet for Varsel.
+ * Built with Tailwind CSS v4 using the @theme directive.
+ * 
+ * Defines custom CSS variables for colors, shadows, and animations.
+ * Supports light and dark modes via the .dark class (standard Tailwind approach).
+ */
+
 @import "tailwindcss";
 @source "./**/*.{svelte,js,ts}";
 
 :root {
+	/* Base hue used for generating the color palette (oklch) */
 	--base-hue: 265;
+
+	/* Semantic color tokens */
 	--color-vs-popover: oklch(1 0 0);
 	--color-vs-popover-muted: oklch(0.96 0.002 var(--base-hue));
 	--color-vs-foreground: oklch(0.1408 0.0044 var(--base-hue));
@@ -13,6 +24,7 @@
 	--color-vs-warning: oklch(0.8 0.2 75);
 	--color-vs-success: oklch(0.7 0.18 155);
 
+	/* Shadows */
 	--shadow-vs-button:
 		0px 1px 1px -0.5px rgba(0, 0, 0, 0.15), 0px 3px 3px -1.5px
 		rgba(0, 0, 0, 0.05);
@@ -23,6 +35,8 @@
 		0px 12px 12px -6px rgba(0, 0, 0, 0.05),
 		0px 24px 24px -12px rgba(0, 0, 0, 0.05),
 		0px 48px 48px -24px rgba(0, 0, 0, 0.05);
+
+	/* Radius & Easing */
 	--radius-base: 0.125rem;
 	--ease-vs-button: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	--ease-vs-toast: cubic-bezier(0.32, 0.72, 0, 1);
@@ -59,6 +73,7 @@
 	--ease-vs-toast: var(--ease-vs-toast);
 }
 
+/* Spinner Styles */
 .vs-spinner {
 	display: inline-flex;
 	width: 1rem;
@@ -85,6 +100,7 @@
 	animation: vs-spin 1s linear infinite;
 }
 
+/* Icon Styles */
 .vs-icon {
 	display: inline-flex;
 	width: 1rem;

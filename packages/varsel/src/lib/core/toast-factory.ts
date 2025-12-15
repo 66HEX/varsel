@@ -1,3 +1,7 @@
+/**
+ * Factory module for creating and managing toast notifications.
+ * Provides the main `toast` function and its variants (success, error, promise).
+ */
 import { toastState } from "./toast-state";
 import type {
 	PromiseToastState,
@@ -6,6 +10,9 @@ import type {
 	ToastPromiseOptions,
 } from "./types";
 
+/**
+ * Helper to normalize string input into a ToastData object.
+ */
 const normalizeToastData = (
 	data: Omit<ToastData, "id"> | string,
 ): Omit<ToastData, "id"> => {
@@ -15,6 +22,9 @@ const normalizeToastData = (
 	return data;
 };
 
+/**
+ * Resolves the state of a promise-based toast (success or error) into actual toast data.
+ */
 const resolvePromiseState = async <Value>(
 	value: Value,
 	state: PromiseToastState<Value>,
@@ -24,10 +34,18 @@ const resolvePromiseState = async <Value>(
 	return normalizeToastData(resolved);
 };
 
+/**
+ * The main entry point for creating toasts.
+ * @param data - Toast configuration object or description string.
+ * @returns The ID of the created toast.
+ */
 const createToast: ToastInvoker = ((data: Omit<ToastData, "id"> | string) => {
 	return toastState.add(normalizeToastData(data));
 }) as ToastInvoker;
 
+/**
+ * Creates a success variant toast.
+ */
 createToast.success = (
 	data: Omit<ToastData, "id" | "variant"> | string,
 ): string => {
@@ -37,6 +55,9 @@ createToast.success = (
 	return toastState.add({ ...data, variant: "success" });
 };
 
+/**
+ * Creates a warning variant toast.
+ */
 createToast.warning = (
 	data: Omit<ToastData, "id" | "variant"> | string,
 ): string => {
@@ -46,6 +67,9 @@ createToast.warning = (
 	return toastState.add({ ...data, variant: "warning" });
 };
 
+/**
+ * Creates an error (destructive) variant toast.
+ */
 createToast.error = (
 	data: Omit<ToastData, "id" | "variant"> | string,
 ): string => {
@@ -55,6 +79,14 @@ createToast.error = (
 	return toastState.add({ ...data, variant: "destructive" });
 };
 
+/**
+ * Creates a toast that tracks a promise's lifecycle.
+ * Updates automatically from loading -> success/error.
+ *
+ * @param promise - The promise to observe.
+ * @param options - Configuration for loading, success, and error states.
+ * @returns The ID of the toast.
+ */
 createToast.promise = <T, E = unknown>(
 	promise: PromiseLike<T>,
 	options: ToastPromiseOptions<T, E>,
@@ -94,10 +126,16 @@ createToast.promise = <T, E = unknown>(
 	return toastId;
 };
 
+/**
+ * Dismisses a toast by ID.
+ */
 createToast.dismiss = (id: string): void => {
 	toastState.update(id, { shouldClose: true });
 };
 
+/**
+ * Dismisses all active toasts.
+ */
 createToast.dismissAll = (): void => {
 	toastState.dismissAll();
 };

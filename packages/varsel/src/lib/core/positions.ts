@@ -1,3 +1,7 @@
+/**
+ * Configuration for initial animation states based on toast position.
+ * Defines the starting transform values (x, y) for entering and exiting toasts.
+ */
 export const POSITION_CONFIGS = {
 	"top-left": {
 		animateIn: { x: -100, y: -20 },
@@ -25,6 +29,9 @@ export const POSITION_CONFIGS = {
 	},
 } as const;
 
+/**
+ * Available positions for the toaster on the screen.
+ */
 export type ToastPosition =
 	| "top-left"
 	| "top-center"

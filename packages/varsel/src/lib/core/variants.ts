@@ -1,9 +1,17 @@
 import { cva } from "class-variance-authority";
 
+/**
+ * CVA definition for the main toast container element.
+ * Handles positioning logic (absolute/fixed positioning coordinates)
+ * and base theming (colors based on variant).
+ */
 export const toastContainerVariants = cva(
 	"pointer-events-auto fixed rounded-vs-lg border shadow-vs-toast will-change-transform border-vs-border bg-vs-popover",
 	{
 		variants: {
+			/**
+			 * Determines where the toast is anchored on the screen.
+			 */
 			position: {
 				"top-left": "top-4 left-4 w-full max-w-sm",
 				"top-center":
@@ -14,6 +22,9 @@ export const toastContainerVariants = cva(
 					"bottom-4 left-1/2 w-full max-w-sm -translate-x-1/2 transform",
 				"bottom-right": "right-4 bottom-4 w-full max-w-sm",
 			},
+			/**
+			 * Semantic variant of the toast affecting text colors.
+			 */
 			variant: {
 				default: "text-vs-foreground",
 				success: "text-vs-success/90",
@@ -28,6 +39,11 @@ export const toastContainerVariants = cva(
 	},
 );
 
+/**
+ * CVA definition for the inner content wrapper of the toast.
+ * Useful for applying styles specific to the content area (e.g. overflow, padding overrides)
+ * separate from the structural container.
+ */
 export const toastContentVariants = cva("relative overflow-hidden rounded-vs-lg", {
 	variants: {
 		variant: {

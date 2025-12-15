@@ -1,4 +1,11 @@
 <script lang="ts">
+/**
+ * @component
+ * @description
+ * Internal component responsible for grouping toasts by position and calculating
+ * their stacking offsets (both collapsed and expanded).
+ * It handles the "hover to expand" logic and manages the lifecycle of toast groups.
+ */
 import VarselItem from "./VarselItem.svelte";
 import {
 	ANIMATION_CONFIG,
@@ -12,8 +19,11 @@ let {
 	onRemove,
 	expandedGap = ANIMATION_CONFIG.EXPANDED_GAP,
 }: {
+	/** The list of all active toasts from the global state. */
 	toasts?: ToastData[];
+	/** Callback to remove a toast from the state. */
 	onRemove: (id: string) => void;
+	/** The gap in pixels between toasts when expanded. */
 	expandedGap?: number;
 } = $props();
 
@@ -34,7 +44,7 @@ let heldToasts = $state<Record<ToastPosition, Set<string>>>(
 	createPositionMap(() => new Set<string>()),
 );
 
-// Non-reactive internal state for "previous" values
+// Non-reactive internal state for "previous" values (mimicking legacy behavior)
 let previousStackIndex: Record<string, number> = {};
 let previousCollapsedOffsets: Record<string, number> = {};
 let previousExpandedOffsets: Record<string, number> = {};

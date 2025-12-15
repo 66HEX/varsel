@@ -1,3 +1,7 @@
+/**
+ * SVG definitions for status icons (success, warning, error).
+ * These are lightweight SVG path data objects rendered by the toast component.
+ */
 import type { ToastData } from "./internals";
 
 const ICON_VARIANTS = ["success", "warning", "destructive"] as const;
@@ -43,6 +47,11 @@ export const variantIconMap = {
 	},
 } satisfies Record<IconVariant, VariantIconDefinition>;
 
+/**
+ * Checks if a given toast variant has an associated icon.
+ * @param variant - The variant string to check.
+ * @returns True if the variant is one of 'success', 'warning', or 'destructive'.
+ */
 export const hasVariantIcon = (
 	variant?: ToastData["variant"],
 ): variant is IconVariant => {

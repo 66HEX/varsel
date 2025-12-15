@@ -1,4 +1,10 @@
 <script lang="ts">
+/**
+ * @component
+ * @description
+ * Individual toast component. Handles its own enter/exit animations,
+ * swipe-to-dismiss gestures, auto-closing timer, and rendering of content.
+ */
 import { onDestroy, onMount } from "svelte";
 import {
 	ANIMATION_CONFIG,
@@ -34,15 +40,25 @@ let {
 	onGroupHoverEnter = undefined,
 	onGroupHoldChange = undefined,
 }: {
+	/** The toast data object containing all content and state. */
 	toast: PositionedToast;
+	/** Callback to remove the toast from the DOM after exit animation. */
 	onRemove: (id: string) => void;
+	/** Whether the parent group (stack) is currently hovered. */
 	isGroupHovered?: boolean;
+	/** The vertical offset for this toast when the stack is expanded. */
 	expandedOffset?: number;
+	/** The gap between toasts when expanded. */
 	expandedGap?: number;
+	/** The vertical offset for this toast when the stack is collapsed. */
 	collapsedOffset?: number;
+	/** The offset to use when the toast is hidden in the stack. */
 	hiddenCollapsedOffset?: number;
+	/** Callback to report the height of the toast to the manager. */
 	onHeightChange?: (id: string, height: number) => void;
+	/** Callback to notify the manager that the user has entered the toast area. */
 	onGroupHoverEnter?: () => void;
+	/** Callback to notify the manager that the user is interacting (holding) the toast. */
 	onGroupHoldChange?: (holding: boolean) => void;
 } = $props();
 
