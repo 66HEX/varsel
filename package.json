@@ -8,7 +8,14 @@
     "build:docs": "bun run --cwd=apps/docs build",
     "dev": "bun run --cwd=apps/docs dev",
     "check": "bun run --cwd=packages/varsel check && bun run --cwd=apps/docs check",
-    "lint": "bun run --cwd=packages/varsel lint"
+    "lint": "bun run --cwd=packages/varsel lint",
+    "prepare": "husky"
   },
-  "workspaces": ["packages/*", "apps/*"]
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
 }

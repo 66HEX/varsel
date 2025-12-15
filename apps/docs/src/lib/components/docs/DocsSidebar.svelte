@@ -219,9 +219,21 @@ onMount(() => {
 						{/each}
 					</div>
 				{/each}
+
+				<div class="flex flex-col gap-1 mt-auto mb-1">
+					<a
+						href="/docs/changelog"
+						aria-current={currentPage.url.pathname.startsWith("/docs/changelog") ? "page" : undefined}
+						class={`px-2 py-1 text-left rounded-sm transition-all duration-150 ease-out hover:bg-card-muted hover:text-foreground ${currentPage.url.pathname.startsWith("/docs/changelog") ? "text-foreground font-medium bg-card-muted" : "text-foreground/70"}`}
+						onclick={handleNavLinkClick}
+					>
+						<span class="block text-sm font-normal">Changelog</span>
+					</a>
+				</div>
 			</nav>
 
-			<div class="mt-4 lg:mt-auto flex items-center justify-between gap-2 border-t border-border pt-4">
+			<div class="mt-4 lg:mt-auto border-t border-border pt-4">
+				<div class="flex items-center justify-between gap-2">
 				<a
 					class="inline-flex p-0.5 size-6 items-center justify-center rounded-sm text-foreground/70 hover:text-foreground transition-[color] duration-150 ease-out"
 					href="https://github.com/66HEX/varsel"
@@ -317,6 +329,7 @@ onMount(() => {
 						</svg>
 					</button>
 				</div>
+			</div>
 			</div>
 		</div>
 		</div>
