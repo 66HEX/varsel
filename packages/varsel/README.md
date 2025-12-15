@@ -21,18 +21,22 @@ Varsel ships only ESM and expects Svelte 5+.
 	}
 </script>
 
-<button on:click={notify}>Save</button>
+<button onclick={notify}>Save</button>
 <VarselToaster />
 ```
 
 ### Styles
 
-`varsel/styles.css` uses Tailwind CSS v4 directives and already includes `@source "./**/*.{svelte,js}"`, so any consumer importing the stylesheet automatically exposes Varsel's class usage to Tailwind. Just make sure your tooling processes CSS from `node_modules/varsel` with Tailwind/PostCSS, then import the styles once:
+Varsel ships with a **prebuilt CSS file**, meaning it works out of the box without requiring you to configure Tailwind CSS or PostCSS in your application.
+
+Simply import the styles once in your root layout or entry file:
 
 ```ts
-// main.ts
+// src/routes/+layout.svelte (or main.ts)
 import "varsel/styles.css";
 ```
+
+The styles are fully self-contained and scoped, using CSS variables for easy theming.
 
 ### API
 

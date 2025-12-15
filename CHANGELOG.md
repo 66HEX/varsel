@@ -6,6 +6,31 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.0] – 2025-12-15
+
+### Changed
+
+- **Svelte 5 Runes Migration**  
+  Complete internal refactor of all components (`VarselToaster`, `VarselManager`, `VarselItem`) to use the new Svelte 5 Runes syntax (`$state`, `$props`, `$derived`, `$effect`). This modernizes the codebase and aligns with the future of the Svelte ecosystem while maintaining full backward compatibility with the public API.
+
+### Added
+
+- **Comprehensive JSDoc Documentation**  
+  All core modules, types, and components are now fully documented with JSDoc comments, improving IntelliSense support and developer experience.
+
+- **Robust Testing Suite**  
+  Introduced a complete testing infrastructure using **Vitest** and **Testing Library**.
+  - **Unit Tests**: Full coverage for state logic (`toast-state`).
+  - **Integration Tests**: Verification of component rendering and API interactions.
+  - **Accessibility Tests**: Automated checks (`vitest-axe`) for ARIA roles, live regions, and keyboard navigation.
+  - **Interaction Tests**: Coverage for complex behaviors like stacking limits, action callbacks, and queue management.
+
+- **Performance Improvements**  
+  - Optimized timer logic for `toast.promise` and persistent toasts (removed unnecessary timeouts for `Infinity` duration).
+  - Reduced reactivity overhead by leveraging fine-grained Runes.
+
+---
+
 ## [0.1.1] – 2025-12-14
 
 ### Added
