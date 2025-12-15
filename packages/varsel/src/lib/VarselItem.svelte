@@ -20,101 +20,91 @@ import {
 import {
 	hasVariantIcon,
 	variantIconMap,
-	type VariantIconDefinition,
 } from "./variant-icons";
 
-export let toast: PositionedToast;
-export let onRemove: (id: string) => void;
-export let isGroupHovered = false;
-export let expandedOffset = 0;
-export let expandedGap: number = ANIMATION_CONFIG.EXPANDED_GAP;
-export let collapsedOffset: number | undefined = undefined;
-export let hiddenCollapsedOffset: number | undefined = undefined;
-export let onHeightChange: ((id: string, height: number) => void) | undefined =
-	undefined;
-export let onGroupHoverEnter: (() => void) | undefined = undefined;
-export let onGroupHoldChange:
-	| ((holding: boolean) => void)
-	| undefined = undefined;
+let {
+	toast,
+	onRemove,
+	isGroupHovered = false,
+	expandedOffset = 0,
+	expandedGap = ANIMATION_CONFIG.EXPANDED_GAP,
+	collapsedOffset = undefined,
+	hiddenCollapsedOffset = undefined,
+	onHeightChange = undefined,
+	onGroupHoverEnter = undefined,
+	onGroupHoldChange = undefined,
+}: {
+	toast: PositionedToast;
+	onRemove: (id: string) => void;
+	isGroupHovered?: boolean;
+	expandedOffset?: number;
+	expandedGap?: number;
+	collapsedOffset?: number;
+	hiddenCollapsedOffset?: number;
+	onHeightChange?: (id: string, height: number) => void;
+	onGroupHoverEnter?: () => void;
+	onGroupHoldChange?: (holding: boolean) => void;
+} = $props();
 
-let toastRef: HTMLDivElement | null = null;
-let isItemHovered = false;
-let isSwiping = false;
-let swipeDismissDirection: SwipeDirection | null = null;
-let animationState: "entering" | "entered" | "exiting" | "stacking" =
-	"entering";
+let id = $derived(toast.id);
+let title = $derived(toast.title);
+let description = $derived(toast.description);
+let variant = $derived(toast.variant || "default");
+let duration = $derived(toast.duration || 5000);
+let action = $derived(toast.action);
+let isLoading = $derived(toast.isLoading || false);
+let index = $derived(toast.index);
+let renderIndex = $derived(toast.renderIndex);
+let shouldClose = $derived(toast.shouldClose);
+let position = $derived(toast.position || "bottom-center");
+let className = $derived(toast.className || "");
+let onClose = $derived(toast.onClose);
+let showClose = $derived(toast.showClose ?? true);
+
+let toastRef = $state<HTMLDivElement | null>(null);
+let isItemHovered = $state(false);
+let isSwiping = $state(false);
+let swipeDismissDirection = $state<SwipeDirection | null>(null);
+let animationState = $state<"entering" | "entered" | "exiting" | "stacking">(
+	"entering",
+);
 
 let timeoutRef: ReturnType<typeof setTimeout> | null = null;
 let timerStartRef: number | null = null;
-let remainingTime: number | null = Number.NaN;
+let remainingTime = $state<number | null>(Number.NaN);
 let enterAnimationFrame: number | null = null;
 let focusTimeout: ReturnType<typeof setTimeout> | null = null;
 let pointerStart: { x: number; y: number } | null = null;
 let dragStartTime: number | null = null;
 let swipeAxis: SwipeAxis | null = null;
 let lastSwipe = { x: 0, y: 0 };
-let resizeCleanup: (() => void) | null = null;
-let mounted = false;
+let mounted = $state(false);
 let prevShouldClose = false;
 let previousDuration: number | undefined;
-let isExiting = false;
+let isExiting = $state(false);
 let exitAnimationComplete = false;
-let hasAnimatedIn = false;
+let hasAnimatedIn = $state(false);
 let isPointerHeld = false;
-let iconConfig: VariantIconDefinition | undefined;
-let showStatusIcon = false;
 type SpinnerState = "hidden" | "loading" | "finishing";
-let spinnerState: SpinnerState = "hidden";
+let spinnerState = $state<SpinnerState>("hidden");
 let spinnerFinishTimer: ReturnType<typeof setTimeout> | null = null;
-let shouldRenderSpinner = false;
-let hasShownSpinner = false;
-let iconStateClass: string | undefined;
+let hasShownSpinner = $state(false);
 
-let id: string;
-let title: string | undefined;
-let description: string | undefined;
-let variant: PositionedToast["variant"];
-let duration: number;
-let action: PositionedToast["action"];
-let isLoading: boolean | undefined;
-let index: number;
-let renderIndex: number;
-let shouldClose: boolean | undefined;
-let position: PositionedToast["position"];
-let className: string | undefined;
-let onClose: (() => void) | undefined;
-let showClose: boolean;
+$effect(() => {
+	if (isLoading) {
+		hasShownSpinner = true;
+	}
+});
 
-$: ({
-	id,
-	title,
-	description,
-	variant = "default",
-	duration = 5000,
-	action,
-	isLoading = false,
-	index,
-	renderIndex,
-	shouldClose,
-		position = "bottom-center",
-	className = "",
-	onClose,
-	showClose = true,
-} = toast);
-
-$: if (isLoading) {
-	hasShownSpinner = true;
-}
-
-$: {
+$effect(() => {
 	if (isLoading) {
 		spinnerState = "loading";
 	} else if (spinnerState === "loading") {
 		spinnerState = "finishing";
 	}
-}
+});
 
-$: {
+$effect(() => {
 	if (spinnerState === "finishing") {
 		if (!spinnerFinishTimer) {
 			spinnerFinishTimer = setTimeout(() => {
@@ -126,23 +116,29 @@ $: {
 		clearTimeout(spinnerFinishTimer);
 		spinnerFinishTimer = null;
 	}
-}
+});
 
-$: shouldRenderSpinner = spinnerState !== "hidden";
+let shouldRenderSpinner = $derived(spinnerState !== "hidden");
 
 const handleSpinnerAnimationEnd = (event: AnimationEvent) => {
 	if (event.animationName !== "vs-spinner-finish") return;
 	spinnerState = "hidden";
 };
 
-$: iconStateClass =
+let iconConfig = $derived(
+	hasVariantIcon(variant) ? variantIconMap[variant] : undefined,
+);
+let showStatusIcon = $derived(isLoading || Boolean(iconConfig));
+
+let iconStateClass = $derived(
 	!iconConfig
 		? undefined
 		: !hasShownSpinner
 			? "vs-icon--static"
 			: isLoading
 				? "vs-icon--waiting"
-				: "vs-icon--pop";
+				: "vs-icon--pop",
+);
 
 const clearSwipeRefs = () => {
 	pointerStart = null;
@@ -192,13 +188,13 @@ const handleClose = () => {
 	toastState.update(id, { shouldClose: true, isLeaving: true });
 };
 
-$: {
+$effect(() => {
 	const desiredClose = Boolean(shouldClose);
 	if (desiredClose && !prevShouldClose) {
 		handleClose();
 	}
 	prevShouldClose = desiredClose;
-}
+});
 
 onMount(() => {
 	mounted = true;
@@ -207,7 +203,6 @@ onMount(() => {
 		if (enterAnimationFrame) cancelAnimationFrame(enterAnimationFrame);
 		if (timeoutRef) clearTimeout(timeoutRef);
 		if (focusTimeout) clearTimeout(focusTimeout);
-		resizeCleanup?.();
 	};
 });
 
@@ -215,7 +210,6 @@ onDestroy(() => {
 	if (enterAnimationFrame) cancelAnimationFrame(enterAnimationFrame);
 	if (timeoutRef) clearTimeout(timeoutRef);
 	if (focusTimeout) clearTimeout(focusTimeout);
-	resizeCleanup?.();
 	if (spinnerFinishTimer) {
 		clearTimeout(spinnerFinishTimer);
 		spinnerFinishTimer = null;
@@ -226,24 +220,27 @@ onDestroy(() => {
 	}
 });
 
-$: if (mounted && duration !== previousDuration) {
-	remainingTime = duration;
-	previousDuration = duration;
-}
-
-$: if (mounted) {
-	resizeCleanup?.();
-	if (!toastRef || !onHeightChange) {
-		resizeCleanup = null;
-	} else {
-		const el = toastRef;
-		const notify = () => onHeightChange?.(id, el.offsetHeight);
-		const ro = new ResizeObserver(() => notify());
-		ro.observe(el);
-		notify();
-		resizeCleanup = () => ro.disconnect();
+$effect(() => {
+	if (mounted && duration !== previousDuration) {
+		remainingTime = duration;
+		previousDuration = duration;
 	}
-}
+});
+
+$effect(() => {
+	if (mounted) {
+		if (!toastRef || !onHeightChange) {
+			// do nothing
+		} else {
+			const el = toastRef;
+			const notify = () => onHeightChange?.(id, el.offsetHeight);
+			const ro = new ResizeObserver(() => notify());
+			ro.observe(el);
+			notify();
+			return () => ro.disconnect();
+		}
+	}
+});
 
 const setFocusToToast = () => {
 	if (!toastRef) return;
@@ -256,87 +253,89 @@ const setFocusToToast = () => {
 	toastRef.focus();
 };
 
-$: iconConfig = hasVariantIcon(variant) ? variantIconMap[variant] : undefined;
-$: showStatusIcon = isLoading || Boolean(iconConfig);
-
-$: if (mounted && toastRef && !isExiting) {
-	if (!hasAnimatedIn && isLatest) {
-		hasAnimatedIn = true;
-		animationState = "entering";
-		if (enterAnimationFrame) {
-			cancelAnimationFrame(enterAnimationFrame);
-		}
-		enterAnimationFrame = requestAnimationFrame(() => {
+$effect(() => {
+	if (mounted && toastRef && !isExiting) {
+		if (!hasAnimatedIn && isLatest) {
+			hasAnimatedIn = true;
+			animationState = "entering";
+			if (enterAnimationFrame) {
+				cancelAnimationFrame(enterAnimationFrame);
+			}
 			enterAnimationFrame = requestAnimationFrame(() => {
-				animationState = "entered";
-				if (action) {
-					if (focusTimeout) clearTimeout(focusTimeout);
-					focusTimeout = setTimeout(
-						() => setFocusToToast(),
-						ANIMATION_CONFIG.ENTER_DURATION * 1000,
-					);
-				}
+				enterAnimationFrame = requestAnimationFrame(() => {
+					animationState = "entered";
+					if (action) {
+						if (focusTimeout) clearTimeout(focusTimeout);
+						focusTimeout = setTimeout(
+							() => setFocusToToast(),
+							ANIMATION_CONFIG.ENTER_DURATION * 1000,
+						);
+					}
+				});
 			});
-		});
-	} else if (hasAnimatedIn) {
-		if (animationState !== "stacking" || index > 0) {
+		} else if (hasAnimatedIn) {
+			if (animationState !== "stacking" || index > 0) {
+				animationState = "stacking";
+			}
+		} else {
 			animationState = "stacking";
 		}
-	} else {
-		animationState = "stacking";
 	}
-}
+});
 
-$: if (mounted) {
-	if (shouldClose || !hasAnimatedIn || duration <= 0) {
-		if (timeoutRef) {
-			clearTimeout(timeoutRef);
-			timeoutRef = null;
-		}
-		timerStartRef = null;
-	} else {
-		if (remainingTime == null || Number.isNaN(remainingTime)) {
-			remainingTime = duration;
-		}
-
-		const isPaused =
-			isGroupHovered || isItemHovered || isSwiping || hiddenByStacking;
-
-		if (isPaused) {
+$effect(() => {
+	if (mounted) {
+		if (shouldClose || !hasAnimatedIn || duration <= 0) {
 			if (timeoutRef) {
 				clearTimeout(timeoutRef);
 				timeoutRef = null;
 			}
-			if (timerStartRef !== null) {
-				const elapsed = Date.now() - timerStartRef;
-				remainingTime = Math.max(0, (remainingTime ?? duration) - elapsed);
-				timerStartRef = null;
-			}
+			timerStartRef = null;
 		} else {
-			if (!timeoutRef) {
-				const ms = Math.max(0, remainingTime ?? duration);
-				if (ms === 0) {
-					handleClose();
-				} else {
-					timerStartRef = Date.now();
-					timeoutRef = setTimeout(() => {
+			if (remainingTime == null || Number.isNaN(remainingTime)) {
+				remainingTime = duration;
+			}
+
+			const isPaused =
+				isGroupHovered || isItemHovered || isSwiping || hiddenByStacking;
+
+			if (isPaused) {
+				if (timeoutRef) {
+					clearTimeout(timeoutRef);
+					timeoutRef = null;
+				}
+				if (timerStartRef !== null) {
+					const elapsed = Date.now() - timerStartRef;
+					remainingTime = Math.max(0, (remainingTime ?? duration) - elapsed);
+					timerStartRef = null;
+				}
+			} else {
+				if (!timeoutRef) {
+					const ms = Math.max(0, remainingTime ?? duration);
+					if (ms === 0) {
 						handleClose();
-					}, ms);
+					} else {
+						timerStartRef = Date.now();
+						timeoutRef = setTimeout(() => {
+							handleClose();
+						}, ms);
+					}
 				}
 			}
 		}
 	}
-}
+});
 
-$: if (mounted && toastRef && !isSwiping && !swipeDismissDirection) {
-	toastRef.style.setProperty("--swipe-translate-x", "0px");
-	toastRef.style.setProperty("--swipe-translate-y", "0px");
-}
+$effect(() => {
+	if (mounted && toastRef && !isSwiping && !swipeDismissDirection) {
+		toastRef.style.setProperty("--swipe-translate-x", "0px");
+		toastRef.style.setProperty("--swipe-translate-y", "0px");
+	}
+});
 
-let swipeDirections: SwipeDirection[] = showClose
-	? getDefaultSwipeDirections(position)
-	: [];
-$: swipeDirections = showClose ? getDefaultSwipeDirections(position) : [];
+let swipeDirections = $derived(
+	showClose ? getDefaultSwipeDirections(position) : [],
+);
 
 const handlePointerDown = (event: PointerEvent) => {
 	if (!showClose) return;
@@ -501,66 +500,47 @@ const handlePointerCancel = (event: PointerEvent) => {
 
 const zIndexBase = Number(ANIMATION_CONFIG.Z_INDEX_BASE);
 
-let isTopPosition = false;
-let maxVisibleIndex = 0;
-let visibleIndex = 0;
-let defaultCollapsedOffset = 0;
-let resolvedCollapsedOffset = 0;
-let resolvedHiddenCollapsedOffset = 0;
-let scale = 1;
-let visibleScale = 1;
-let zIndex = zIndexBase;
-let stackHidden = false;
-let hiddenByStacking = false;
-let isStackLeader = false;
-let isLatest = false;
-type PositionConfig = (typeof POSITION_CONFIGS)[ToastPosition];
-let config: PositionConfig = POSITION_CONFIGS["bottom-center"];
-
-$: isTopPosition = position?.startsWith("top-") ?? false;
-$: maxVisibleIndex = Math.max(0, ANIMATION_CONFIG.MAX_VISIBLE_TOASTS - 1);
-$: visibleIndex = Math.min(index, maxVisibleIndex);
-$: defaultCollapsedOffset = isTopPosition
-	? index * ANIMATION_CONFIG.STACK_OFFSET
-	: -(index * ANIMATION_CONFIG.STACK_OFFSET);
-$: resolvedCollapsedOffset =
+let isTopPosition = $derived(position?.startsWith("top-") ?? false);
+let maxVisibleIndex = $derived(
+	Math.max(0, ANIMATION_CONFIG.MAX_VISIBLE_TOASTS - 1),
+);
+let visibleIndex = $derived(Math.min(index, maxVisibleIndex));
+let defaultCollapsedOffset = $derived(
+	isTopPosition
+		? index * ANIMATION_CONFIG.STACK_OFFSET
+		: -(index * ANIMATION_CONFIG.STACK_OFFSET),
+);
+let resolvedCollapsedOffset = $derived(
 	typeof collapsedOffset === "number" && Number.isFinite(collapsedOffset)
 		? collapsedOffset
-		: defaultCollapsedOffset;
-$: resolvedHiddenCollapsedOffset =
+		: defaultCollapsedOffset,
+);
+let resolvedHiddenCollapsedOffset = $derived(
 	typeof hiddenCollapsedOffset === "number" &&
-	Number.isFinite(hiddenCollapsedOffset)
+		Number.isFinite(hiddenCollapsedOffset)
 		? hiddenCollapsedOffset
-		: resolvedCollapsedOffset;
-$: scale = Math.max(
-	ANIMATION_CONFIG.MIN_SCALE,
-	1 - index * ANIMATION_CONFIG.SCALE_FACTOR,
+		: resolvedCollapsedOffset,
 );
-$: visibleScale = Math.max(
-	ANIMATION_CONFIG.MIN_SCALE,
-	1 - visibleIndex * ANIMATION_CONFIG.SCALE_FACTOR,
+let scale = $derived(
+	Math.max(ANIMATION_CONFIG.MIN_SCALE, 1 - index * ANIMATION_CONFIG.SCALE_FACTOR),
 );
-$: zIndex = zIndexBase - renderIndex;
-$: stackHidden = index >= ANIMATION_CONFIG.MAX_VISIBLE_TOASTS;
-$: hiddenByStacking = stackHidden && animationState !== "exiting";
-$: isStackLeader = index === 0;
-$: isLatest = isStackLeader && !shouldClose;
-$: config = POSITION_CONFIGS[(position ?? "bottom-center") as ToastPosition];
+let visibleScale = $derived(
+	Math.max(
+		ANIMATION_CONFIG.MIN_SCALE,
+		1 - visibleIndex * ANIMATION_CONFIG.SCALE_FACTOR,
+	),
+);
+let zIndex = $derived(zIndexBase - renderIndex);
+let stackHidden = $derived(index >= ANIMATION_CONFIG.MAX_VISIBLE_TOASTS);
+let hiddenByStacking = $derived(stackHidden && animationState !== "exiting");
+let isStackLeader = $derived(index === 0);
+let isLatest = $derived(isStackLeader && !shouldClose);
+type PositionConfig = (typeof POSITION_CONFIGS)[ToastPosition];
+let config = $derived(
+	POSITION_CONFIGS[(position ?? "bottom-center") as ToastPosition],
+);
 
-let transformStyle = {
-	transform: "translate(0px, 0px)",
-	opacity: 1,
-};
-let transitionDuration = `${ANIMATION_CONFIG.ENTER_DURATION}s`;
-let transitionTimingFunction = ANIMATION_CONFIG.EASING_DEFAULT;
-let canSwipe = showClose && swipeDirections.length > 0;
-let swipeCursorClass: string | undefined = undefined;
-let titleId: string | undefined = undefined;
-let descriptionId: string | undefined = undefined;
-let liveRole: "alert" | "status" = "status";
-let livePoliteness: "assertive" | "polite" = "polite";
-
-$: transformStyle = (() => {
+let transformStyle = $derived.by(() => {
 	const baseOffsetY = stackHidden
 		? resolvedHiddenCollapsedOffset
 		: resolvedCollapsedOffset;
@@ -654,9 +634,9 @@ $: transformStyle = (() => {
 		transform,
 		opacity: opacityValue,
 	};
-})();
+});
 
-$: transitionDuration = (() => {
+let transitionDuration = $derived.by(() => {
 	switch (animationState) {
 		case "entering":
 		case "entered":
@@ -666,24 +646,25 @@ $: transitionDuration = (() => {
 		default:
 			return `${ANIMATION_CONFIG.STACK_DURATION}s`;
 	}
-})();
+});
 
-$: transitionTimingFunction =
+let transitionTimingFunction = $derived(
 	animationState === "exiting"
 		? ANIMATION_CONFIG.EASING_EXIT
-		: ANIMATION_CONFIG.EASING_DEFAULT;
+		: ANIMATION_CONFIG.EASING_DEFAULT,
+);
 
-$: canSwipe = showClose && swipeDirections.length > 0;
-$: swipeCursorClass = canSwipe
-	? isSwiping
-		? "cursor-grabbing"
-		: "cursor-grab"
-	: undefined;
+let canSwipe = $derived(showClose && swipeDirections.length > 0);
+let swipeCursorClass = $derived(
+	canSwipe ? (isSwiping ? "cursor-grabbing" : "cursor-grab") : undefined,
+);
 
-$: titleId = title ? `${id}-title` : undefined;
-$: descriptionId = description ? `${id}-desc` : undefined;
-$: liveRole = variant === "destructive" ? "alert" : "status";
-$: livePoliteness = variant === "destructive" ? "assertive" : "polite";
+let titleId = $derived(title ? `${id}-title` : undefined);
+let descriptionId = $derived(description ? `${id}-desc` : undefined);
+let liveRole = $derived(variant === "destructive" ? "alert" : "status");
+let livePoliteness = $derived(
+	(variant === "destructive" ? "assertive" : "polite") as "assertive" | "polite",
+);
 
 const handleBlurCapture = (event: FocusEvent) => {
 	const next = event.relatedTarget as Node | null;

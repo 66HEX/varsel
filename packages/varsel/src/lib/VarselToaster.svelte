@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 export {
 	toast,
 	type ToastData,
@@ -8,7 +8,6 @@ export {
 </script>
 
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import VarselManager from './VarselManager.svelte';
 	import {
 		toastState,
@@ -16,16 +15,16 @@ export {
 		type ToastData,
 	} from './internals';
 
-	export let expandedGap: number | undefined = undefined;
+	let { expandedGap = undefined }: { expandedGap?: number } = $props();
 
-	let toasts: ToastData[] = [];
+	let toasts = $state<ToastData[]>([]);
 	const instanceId = toasterInstanceManager.registerInstance();
 
 	const handleRemove = (id: string) => {
 		toastState.remove(id);
 	};
 
-	onMount(() => {
+	$effect(() => {
 		toasts = toastState.getToasts();
 		const unsubscribe = toastState.subscribe((value) => {
 			toasts = value;

@@ -1,5 +1,4 @@
 <script lang="ts">
-import { onMount } from "svelte";
 import VarselItem from "./VarselItem.svelte";
 import {
 	ANIMATION_CONFIG,
@@ -8,9 +7,15 @@ import {
 	type ToastPosition,
 } from "./internals";
 
-export let toasts: ToastData[] = [];
-export let onRemove: (id: string) => void;
-export let expandedGap: number = ANIMATION_CONFIG.EXPANDED_GAP;
+let {
+	toasts = [],
+	onRemove,
+	expandedGap = ANIMATION_CONFIG.EXPANDED_GAP,
+}: {
+	toasts?: ToastData[];
+	onRemove: (id: string) => void;
+	expandedGap?: number;
+} = $props();
 
 const createPositionMap = <T>(value: () => T): Record<ToastPosition, T> => ({
 	"top-left": value(),
@@ -21,31 +26,38 @@ const createPositionMap = <T>(value: () => T): Record<ToastPosition, T> => ({
 	"bottom-right": value(),
 });
 
-let heights: Record<string, number> = {};
-let hovered: Record<ToastPosition, boolean> = createPositionMap(() => false);
-let heldToasts: Record<ToastPosition, Set<string>> = createPositionMap(
-	() => new Set<string>(),
+let heights = $state<Record<string, number>>({});
+let hovered = $state<Record<ToastPosition, boolean>>(
+	createPositionMap(() => false),
 );
+let heldToasts = $state<Record<ToastPosition, Set<string>>>(
+	createPositionMap(() => new Set<string>()),
+);
+
+// Non-reactive internal state for "previous" values
 let previousStackIndex: Record<string, number> = {};
 let previousCollapsedOffsets: Record<string, number> = {};
 let previousExpandedOffsets: Record<string, number> = {};
-let toastsByPosition: Record<ToastPosition, PositionedToast[]> =
-	createPositionMap<PositionedToast[]>(() => []);
-let positionEntries: [ToastPosition, PositionedToast[]][] = [];
-let collapsedOffsetData: {
+
+let toastsByPosition = $state<Record<ToastPosition, PositionedToast[]>>(
+	createPositionMap<PositionedToast[]>(() => []),
+);
+
+let collapsedOffsetData = $state<{
 	byPosition: Record<ToastPosition, number[]>;
 	byId: Record<string, number>;
-} = { byPosition: createPositionMap<number[]>(() => []), byId: {} };
-let expandedOffsetData: {
+}>({ byPosition: createPositionMap<number[]>(() => []), byId: {} });
+
+let expandedOffsetData = $state<{
 	byPosition: Record<ToastPosition, number[]>;
 	byId: Record<string, number>;
-} = { byPosition: createPositionMap<number[]>(() => []), byId: {} };
+}>({ byPosition: createPositionMap<number[]>(() => []), byId: {} });
 
-let latestPositionEntries: [ToastPosition, PositionedToast[]][] = [];
-let latestHovered: Record<ToastPosition, boolean> = hovered;
-
-$: latestPositionEntries = positionEntries;
-$: latestHovered = hovered;
+let positionEntries = $derived(
+	Object.entries(toastsByPosition) as [ToastPosition, PositionedToast[]][],
+);
+let latestPositionEntries = $derived(positionEntries);
+let latestHovered = $derived(hovered);
 
 const updateHoldState = (
 	position: ToastPosition,
@@ -64,7 +76,8 @@ const updateHoldState = (
 	}
 };
 
-$: {
+// Calculate toastsByPosition based on toasts
+$effect(() => {
 	const grouped = createPositionMap<ToastData[]>(() => []);
 	for (const toast of toasts) {
 		const pos = toast.position || "bottom-center";
@@ -104,9 +117,10 @@ $: {
 
 	previousStackIndex = nextStackIndices;
 	toastsByPosition = positioned;
-}
+});
 
-$: {
+// Update hovered state based on empty groups
+$effect(() => {
 	const next = { ...hovered };
 	let changed = false;
 	for (const pos of Object.keys(hovered) as ToastPosition[]) {
@@ -119,14 +133,10 @@ $: {
 	if (changed) {
 		hovered = next;
 	}
-}
+});
 
-$: positionEntries = Object.entries(toastsByPosition) as [
-	ToastPosition,
-	PositionedToast[],
-][];
-
-$: collapsedOffsetData = (() => {
+// Calculate collapsedOffsetData
+$effect(() => {
 	const byPosition = createPositionMap<number[]>(() => []);
 	const byId: Record<string, number> = {};
 
@@ -200,10 +210,11 @@ $: collapsedOffsetData = (() => {
 	}
 
 	previousCollapsedOffsets = byId;
-	return { byPosition, byId };
-})();
+	collapsedOffsetData = { byPosition, byId };
+});
 
-$: expandedOffsetData = (() => {
+// Calculate expandedOffsetData
+$effect(() => {
 	const byPosition = createPositionMap<number[]>(() => []);
 	const byId: Record<string, number> = {};
 
@@ -251,10 +262,10 @@ $: expandedOffsetData = (() => {
 	}
 
 	previousExpandedOffsets = byId;
-	return { byPosition, byId };
-})();
+	expandedOffsetData = { byPosition, byId };
+});
 
-onMount(() => {
+$effect(() => {
 	const handleMouseMove = (event: MouseEvent) => {
 		if (latestPositionEntries.length === 0) return;
 		const { clientX: x, clientY: y } = event;
