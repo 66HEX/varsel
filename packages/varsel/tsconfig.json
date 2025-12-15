@@ -2,10 +2,10 @@
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
 		"composite": true,
-		"types": ["svelte"],
-		"rootDir": "src",
+		"types": ["svelte", "vitest/globals", "@testing-library/jest-dom"],
+		"rootDir": ".",
 		"declarationDir": "dist",
 		"baseUrl": "."
 	},
-	"include": ["src"]
+	"include": ["src", "test", "vitest.config.ts"]
 }

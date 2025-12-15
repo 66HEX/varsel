@@ -328,7 +328,9 @@ $effect(() => {
 			} else {
 				if (!timeoutRef) {
 					const ms = Math.max(0, remainingTime ?? duration);
-					if (ms === 0) {
+					if (!Number.isFinite(ms)) {
+						// Do not set timeout for infinite duration
+					} else if (ms === 0) {
 						handleClose();
 					} else {
 						timerStartRef = Date.now();
@@ -717,7 +719,7 @@ const handleBlurCapture = (event: FocusEvent) => {
     data-toast-id={id}
 >
     <div
-        role="alert"
+        role="presentation"
         class={cn(swipeCursorClass)}
         aria-busy={isLoading ? "true" : undefined}
         onpointerdown={handlePointerDown}
