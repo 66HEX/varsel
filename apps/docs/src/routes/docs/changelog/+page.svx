@@ -6,7 +6,16 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [unreleased] – 2025-12-15
+## [unreleased] – 2025-12-16
+
+### Added
+
+- **Headless Custom Toasts**  
+  Introduced `toast.custom(Component, options)` API, allowing developers to render completely custom Svelte components as toasts. This provides full control over markup and styling while retaining Varsel's positioning and animation logic.
+- **Strict Typing for Custom Toasts**  
+  Implemented robust TypeScript support for custom components, ensuring type safety for component props passed via `toast.custom()`.
+- **Documentation for Headless Usage**  
+  Added a new "Headless & Custom" documentation section with live examples and code snippets.
 
 ### Fixed
 
