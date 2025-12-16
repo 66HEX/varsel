@@ -12,4 +12,5 @@
   <p>ID: {id}</p>
   <p>Message: {message}</p>
   <p>Count: {count ?? 'N/A'}</p>
+  <p>Variant: {toast?.variant}</p>
 </div>

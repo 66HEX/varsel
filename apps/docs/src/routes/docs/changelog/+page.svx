@@ -17,6 +17,11 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - **Documentation for Headless Usage**  
   Added a new "Headless & Custom" documentation section with live examples and code snippets.
 
+### Changed
+
+- **Refined Animation Tokens**  
+  Standardized cubic-bezier easing functions as CSS variables (`--ease-vs-pop` and `--ease-vs-toast`) for better consistency and easier theming customization.
+
 ### Fixed
 
 - **Mobile Swipe Dismiss**  
