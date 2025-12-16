@@ -1,4 +1,5 @@
 import type { VariantProps } from "class-variance-authority";
+import type { Component } from "svelte";
 import type { toastContainerVariants } from "./variants";
 import type { ToastPosition } from "./positions";
 import type { SwipeAxis, SwipeDirection } from "./swipe";
@@ -39,6 +40,10 @@ export interface ToastData extends VariantProps<typeof toastContainerVariants> {
 	isLeaving?: boolean;
 	/** The position on the screen where this toast should appear. */
 	position?: ToastPosition;
+	/** Custom Svelte component to render instead of the default toast layout. */
+	component?: Component;
+	/** Props to pass to the custom component. */
+	componentProps?: Record<string, any>;
 }
 
 /**
@@ -89,6 +94,15 @@ export type ToastInvoker = {
 	 * Creates an error toast notification.
 	 */
 	error: (data: Omit<ToastData, "id" | "variant"> | string) => string;
+	/**
+	 * Creates a custom component toast.
+	 * @param component - The Svelte component to render.
+	 * @param options - Additional options and props for the component.
+	 */
+	custom: (
+		component: Component,
+		options?: Omit<ToastData, "id" | "component" | "variant">,
+	) => string;
 	/**
 	 * Creates a toast that updates based on the state of a Promise.
 	 * @param promise - The promise to track.

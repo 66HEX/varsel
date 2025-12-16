@@ -46,6 +46,10 @@ export const docNavGroups: DocNavGroup[] = [
 				title: "Variants & styling",
 				href: "/docs/variants",
 			},
+			{
+				title: "Headless & Custom",
+				href: "/docs/headless",
+			},
 		],
 	},
 ];

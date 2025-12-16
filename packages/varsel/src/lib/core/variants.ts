@@ -6,7 +6,7 @@ import { cva } from "class-variance-authority";
  * and base theming (colors based on variant).
  */
 export const toastContainerVariants = cva(
-	"pointer-events-auto fixed rounded-vs-lg border shadow-vs-toast will-change-transform border-vs-border bg-vs-popover",
+	"pointer-events-auto fixed will-change-transform",
 	{
 		variants: {
 			/**
@@ -26,10 +26,15 @@ export const toastContainerVariants = cva(
 			 * Semantic variant of the toast affecting text colors.
 			 */
 			variant: {
-				default: "text-vs-foreground",
-				success: "text-vs-success/90",
-				warning: "text-vs-warning/90",
-				destructive: "text-vs-destructive/90",
+				default:
+					"rounded-vs-lg border shadow-vs-toast border-vs-border bg-vs-popover text-vs-foreground",
+				success:
+					"rounded-vs-lg border shadow-vs-toast border-vs-border bg-vs-popover text-vs-success/90",
+				warning:
+					"rounded-vs-lg border shadow-vs-toast border-vs-border bg-vs-popover text-vs-warning/90",
+				destructive:
+					"rounded-vs-lg border shadow-vs-toast border-vs-border bg-vs-popover text-vs-destructive/90",
+				custom: "",
 			},
 		},
 		defaultVariants: {
@@ -51,6 +56,7 @@ export const toastContentVariants = cva("relative overflow-hidden rounded-vs-lg"
 			success: "",
 			warning: "",
 			destructive: "",
+			custom: "",
 		},
 	},
 	defaultVariants: {

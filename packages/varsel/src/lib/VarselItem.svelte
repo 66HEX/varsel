@@ -734,141 +734,146 @@ const handleBlurCapture = (event: FocusEvent) => {
         onfocuscapture={() => (isItemHovered = true)}
         onblurcapture={handleBlurCapture}
     >
-        <div class={cn(toastContentVariants({ variant }))}>
-            {#if showClose}
-                <button
-                    type="button"
-                    onclick={handleClose}
-                    class={cn(
-                        "absolute top-2 right-2 cursor-pointer rounded-vs-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
-                    )}
-                    aria-label="Close toast"
-                >
-                    <svg
-                        aria-hidden="true"
-                        class="h-4 w-4"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <line x1="18" x2="6" y1="6" y2="18" />
-                        <line x1="6" x2="18" y1="6" y2="18" />
-                    </svg>
-                </button>
-            {/if}
+		{#if toast.component}
+			{@const Component = toast.component}
+			<Component {id} {toast} {...toast.componentProps} />
+		{:else}
+			<div class={cn(toastContentVariants({ variant }))}>
+				{#if showClose}
+					<button
+						type="button"
+						onclick={handleClose}
+						class={cn(
+							"absolute top-2 right-2 cursor-pointer rounded-vs-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
+						)}
+						aria-label="Close toast"
+					>
+						<svg
+							aria-hidden="true"
+							class="h-4 w-4"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<line x1="18" x2="6" y1="6" y2="18" />
+							<line x1="6" x2="18" y1="6" y2="18" />
+						</svg>
+					</button>
+				{/if}
 
-            <div class="p-4 pr-8">
-                <div class="flex gap-3">
-                    {#if showStatusIcon}
-                        <span class="relative inline-flex h-4 w-4 shrink-0 items-center justify-center">
-                            {#if shouldRenderSpinner}
-                                <span
-                                    class={cn(
-                                        "vs-spinner absolute inset-0",
-                                        spinnerState === "loading"
-                                            ? "vs-spinner--active"
-                                            : "vs-spinner--finish",
-                                    )}
-                                    role={spinnerState === "loading" ? "status" : undefined}
-                                    aria-label={spinnerState === "loading" ? "Loading..." : undefined}
-                                    aria-live={spinnerState === "loading" ? "assertive" : undefined}
-                                    onanimationend={handleSpinnerAnimationEnd}
-                                >
-                                    <svg
-                                        viewBox="0 0 256 256"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="24"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <line x1="128" y1="32" x2="128" y2="64" />
-                                        <line x1="195.9" y1="60.1" x2="173.3" y2="82.7" />
-                                        <line x1="224" y1="128" x2="192" y2="128" />
-                                        <line x1="195.9" y1="195.9" x2="173.3" y2="173.3" />
-                                        <line x1="128" y1="224" x2="128" y2="192" />
-                                        <line x1="60.1" y1="195.9" x2="82.7" y2="173.3" />
-                                        <line x1="32" y1="128" x2="64" y2="128" />
-                                        <line x1="60.1" y1="60.1" x2="82.7" y2="82.7" />
-                                    </svg>
-                                </span>
-                            {/if}
-                            {#if iconConfig}
-                                <span
-                                    class={cn(
-                                        "vs-icon absolute inset-0 flex items-center justify-center",
-                                        iconStateClass,
-                                    )}
-                                    aria-hidden="true"
-                                >
-                                    <svg
-                                        viewBox={iconConfig.viewBox}
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        {#each iconConfig.elements as element, elementIndex (elementIndex)}
-                                            {#if element.tag === "path"}
-                                                <path d={element.d} />
-                                            {:else if element.tag === "line"}
-                                                <line
-                                                    x1={element.x1}
-                                                    y1={element.y1}
-                                                    x2={element.x2}
-                                                    y2={element.y2}
-                                                />
-                                            {:else if element.tag === "circle"}
-                                                <circle
-                                                    cx={element.cx}
-                                                    cy={element.cy}
-                                                    r={element.r}
-                                                />
-                                            {/if}
-                                        {/each}
-                                    </svg>
-                                </span>
-                            {/if}
-                        </span>
-                    {/if}
-                    <div class="min-w-0">
-                        {#if title}
-                            <div
-                                id={titleId}
-                                class="mb-1 text-sm leading-none font-medium select-none"
-                            >
-                                {title}
-                            </div>
-                        {/if}
-                        {#if description}
-                            <div
-                                id={descriptionId}
-                                class="text-sm leading-snug text-vs-foreground/70 text-balance select-none"
-                            >
-                                {description}
-                            </div>
-                        {/if}
-                        {#if action}
-                            <div class="mt-3">
-                                <button
-                                    type="button"
-                                    onclick={() => {
-                                        action.onClick();
-                                        handleClose();
-                                    }}
-                                    class="relative inline-flex cursor-pointer items-center justify-center rounded-vs-md px-3 py-1.5 text-sm font-medium bg-vs-foreground text-vs-popover shadow-vs-button transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-offset-vs-ring-offset/50 focus-visible:outline-none focus-visible:ring-vs-ring/50"
-                                >
-                                    {action.label}
-                                </button>
-                            </div>
-                        {/if}
-                    </div>
-                </div>
-            </div>
-        </div>
+				<div class="p-4 pr-8">
+					<div class="flex gap-3">
+						{#if showStatusIcon}
+							<span class="relative inline-flex h-4 w-4 shrink-0 items-center justify-center">
+								{#if shouldRenderSpinner}
+									<span
+										class={cn(
+											"vs-spinner absolute inset-0",
+											spinnerState === "loading"
+												? "vs-spinner--active"
+												: "vs-spinner--finish",
+										)}
+										role={spinnerState === "loading" ? "status" : undefined}
+										aria-label={spinnerState === "loading" ? "Loading..." : undefined}
+										aria-live={spinnerState === "loading" ? "assertive" : undefined}
+										onanimationend={handleSpinnerAnimationEnd}
+									>
+										<svg
+											viewBox="0 0 256 256"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="24"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											<line x1="128" y1="32" x2="128" y2="64" />
+											<line x1="195.9" y1="60.1" x2="173.3" y2="82.7" />
+											<line x1="224" y1="128" x2="192" y2="128" />
+											<line x1="195.9" y1="195.9" x2="173.3" y2="173.3" />
+											<line x1="128" y1="224" x2="128" y2="192" />
+											<line x1="60.1" y1="195.9" x2="82.7" y2="173.3" />
+											<line x1="32" y1="128" x2="64" y2="128" />
+											<line x1="60.1" y1="60.1" x2="82.7" y2="82.7" />
+										</svg>
+									</span>
+								{/if}
+								{#if iconConfig}
+									<span
+										class={cn(
+											"vs-icon absolute inset-0 flex items-center justify-center",
+											iconStateClass,
+										)}
+										aria-hidden="true"
+									>
+										<svg
+											viewBox={iconConfig.viewBox}
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											{#each iconConfig.elements as element, elementIndex (elementIndex)}
+												{#if element.tag === "path"}
+													<path d={element.d} />
+												{:else if element.tag === "line"}
+													<line
+														x1={element.x1}
+														y1={element.y1}
+														x2={element.x2}
+														y2={element.y2}
+													/>
+												{:else if element.tag === "circle"}
+													<circle
+														cx={element.cx}
+														cy={element.cy}
+														r={element.r}
+													/>
+												{/if}
+											{/each}
+										</svg>
+									</span>
+								{/if}
+							</span>
+						{/if}
+						<div class="min-w-0">
+							{#if title}
+								<div
+									id={titleId}
+									class="mb-1 text-sm leading-none font-medium select-none"
+								>
+									{title}
+								</div>
+							{/if}
+							{#if description}
+								<div
+									id={descriptionId}
+									class="text-sm leading-snug text-vs-foreground/70 text-balance select-none"
+								>
+									{description}
+								</div>
+							{/if}
+							{#if action}
+								<div class="mt-3">
+									<button
+										type="button"
+										onclick={() => {
+											action.onClick();
+											handleClose();
+										}}
+										class="relative inline-flex cursor-pointer items-center justify-center rounded-vs-md px-3 py-1.5 text-sm font-medium bg-vs-foreground text-vs-popover shadow-vs-button transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-offset-vs-ring-offset/50 focus-visible:outline-none focus-visible:ring-vs-ring/50"
+									>
+										{action.label}
+									</button>
+								</div>
+							{/if}
+						</div>
+					</div>
+				</div>
+			</div>
+		{/if}
     </div>
 </div>

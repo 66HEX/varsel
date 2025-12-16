@@ -2,6 +2,7 @@
  * Factory module for creating and managing toast notifications.
  * Provides the main `toast` function and its variants (success, error, promise).
  */
+import type { Component } from "svelte";
 import { toastState } from "./toast-state";
 import type {
 	PromiseToastState,
@@ -77,6 +78,16 @@ createToast.error = (
 		return toastState.add({ description: data, variant: "destructive" });
 	}
 	return toastState.add({ ...data, variant: "destructive" });
+};
+
+/**
+ * Creates a custom component toast.
+ */
+createToast.custom = (
+	component: Component,
+	options?: Omit<ToastData, "id" | "component" | "variant">,
+): string => {
+	return toastState.add({ ...(options ?? {}), component, variant: "custom" });
 };
 
 /**
