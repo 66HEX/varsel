@@ -1,5 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
-import type { Component } from "svelte";
+import type { Component } from "svelte"; // Use Component
+
 import type { toastContainerVariants } from "./variants";
 import type { ToastPosition } from "./positions";
 import type { SwipeAxis, SwipeDirection } from "./swipe";
@@ -41,7 +42,7 @@ export interface ToastData extends VariantProps<typeof toastContainerVariants> {
 	/** The position on the screen where this toast should appear. */
 	position?: ToastPosition;
 	/** Custom Svelte component to render instead of the default toast layout. */
-	component?: Component;
+	component?: Component<any>; // Use Component<any> for storage
 	/** Props to pass to the custom component. */
 	componentProps?: Record<string, any>;
 }
@@ -77,7 +78,7 @@ export type ToastPromiseOptions<
  */
 export type ToastInvoker = {
 	/**
-	 * Creates a default toast notification.
+	 * Creates a default toast notification. 
 	 * @param data - The toast options or description string.
 	 * @returns The ID of the created toast.
 	 */
@@ -99,9 +100,11 @@ export type ToastInvoker = {
 	 * @param component - The Svelte component to render.
 	 * @param options - Additional options and props for the component.
 	 */
-	custom: (
-		component: Component,
-		options?: Omit<ToastData, "id" | "component" | "variant">,
+	custom: <Props extends Record<string, any> = Record<string, any>>(
+		component: Component<Props>,
+		options?: Omit<ToastData, "id" | "component" | "variant" | "componentProps"> & {
+			componentProps?: Omit<Props, "id" | "toast">;
+		},
 	) => string;
 	/**
 	 * Creates a toast that updates based on the state of a Promise.
