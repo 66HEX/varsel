@@ -1,4 +1,41 @@
 <script lang="ts">
+	import ApiTable from "$lib/components/docs/ApiTable.svelte";
+
+	const toasterProps = [
+		{ name: 'position', type: 'ToastPosition', default: "'bottom-center'", description: "Default position for all toasts ('top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right')." },
+		{ name: 'visibleToasts', type: 'number', default: '3', description: "Maximum number of toasts visible in the stack at once." },
+		{ name: 'expand', type: 'boolean', default: 'true', description: "Whether the toast stack expands when hovered." },
+		{ name: 'duration', type: 'number', default: '5000', description: "Default duration (in ms) before a toast automatically closes." },
+		{ name: 'closeButton', type: 'boolean', default: 'true', description: "Whether to show the close button (X) on toasts by default." },
+		{ name: 'pauseOnHover', type: 'boolean', default: 'true', description: "Whether to pause the auto-close timer when hovering over the toast." },
+		{ name: 'offset', type: 'number | string', default: 'undefined', description: "Distance from the edge of the viewport." },
+		{ name: 'dir', type: "'ltr' | 'rtl' | 'auto'", default: "'auto'", description: "Text direction for accessibility and layout." },
+		{ name: 'expandedGap', type: 'number', default: '12', description: "Vertical gap (in px) between toasts when the stack is expanded." }
+	];
+
+	const toastMethods = [
+		{ method: 'toast', signature: '(data: string | ToastData) => string', description: "Creates a default toast. Returns the toast ID." },
+		{ method: 'toast.success', signature: '(data: string | ToastData) => string', description: "Creates a success variant toast." },
+		{ method: 'toast.warning', signature: '(data: string | ToastData) => string', description: "Creates a warning variant toast." },
+		{ method: 'toast.error', signature: '(data: string | ToastData) => string', description: "Creates an error variant toast." },
+		{ method: 'toast.promise', signature: '(promise: Promise, options: ToastPromiseOptions) => string', description: "Creates a toast that updates automatically based on a promise." },
+		{ method: 'toast.custom', signature: '(component: Component, options?: ToastData) => string', description: "Renders a custom Svelte component as a toast." },
+		{ method: 'toast.dismiss', signature: '(id: string) => void', description: "Programmatically dismisses a toast by ID." },
+		{ method: 'toast.dismissAll', signature: '() => void', description: "Dismisses all active toasts." }
+	];
+
+	const toastData = [
+		{ prop: 'title', type: 'string', description: "The main title of the notification." },
+		{ prop: 'description', type: 'string', description: "Detailed message or description." },
+		{ prop: 'duration', type: 'number', description: "Override the default duration for this specific toast. Infinity keeps it open." },
+		{ prop: 'variant', type: "'default' | 'success' | 'warning' | 'destructive'", description: "The visual style of the toast." },
+		{ prop: 'action', type: '{ label: string, onClick: () => void }', description: "Renders an action button." },
+		{ prop: 'onClose', type: '() => void', description: "Callback fired when the toast is closed/dismissed." },
+		{ prop: 'position', type: 'ToastPosition', description: "Override the global position for this specific toast." },
+		{ prop: 'className', type: 'string', description: "Additional CSS classes for the toast container." },
+		{ prop: 'component', type: 'Component', description: "(Internal) The custom component to render." },
+		{ prop: 'componentProps', type: 'Record<string, any>', description: "Props to pass to the custom component." }
+	];
 </script>
 
 # API Reference
@@ -11,17 +48,11 @@ The root component that hosts the toast notifications. Place this once in your a
 
 ### Props
 
-| Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `position` | `ToastPosition` | `bottom-center` | Default position for all toasts (`top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, `bottom-right`). |
-| `visibleToasts` | `number` | `3` | Maximum number of toasts visible in the stack at once. |
-| `expand` | `boolean` | `true` | Whether the toast stack expands when hovered. |
-| `duration` | `number` | `5000` | Default duration (in ms) before a toast automatically closes. |
-| `closeButton` | `boolean` | `true` | Whether to show the close button (X) on toasts by default. |
-| `pauseOnHover` | `boolean` | `true` | Whether to pause the auto-close timer when hovering over the toast. |
-| `offset` | `number` \| `string` | `undefined` | Distance from the edge of the viewport. |
-| `dir` | `ltr` \| `rtl` \| `auto` | `auto` | Text direction for accessibility and layout. |
-| `expandedGap` | `number` | `12` | Vertical gap (in px) between toasts when the stack is expanded. |
+<ApiTable 
+	headers={['Prop', 'Type', 'Default']} 
+	keys={['name', 'type', 'default']} 
+	data={toasterProps} 
+/>
 
 ## toast()
 
@@ -37,30 +68,18 @@ toast({ title: "My Title", description: "My message" });
 
 ### Methods
 
-| Method | Signature | Description |
-| :--- | :--- | :--- |
-| `toast` | `(data: string \| ToastData) => string` | Creates a default toast. Returns the toast ID. |
-| `toast.success` | `(data: string \| ToastData) => string` | Creates a success variant toast. |
-| `toast.warning` | `(data: string \| ToastData) => string` | Creates a warning variant toast. |
-| `toast.error` | `(data: string \| ToastData) => string` | Creates an error variant toast. |
-| `toast.promise` | `(promise: Promise, options: ToastPromiseOptions) => string` | Creates a toast that updates automatically based on a promise. |
-| `toast.custom` | `(component: Component, options?: ToastData) => string` | Renders a custom Svelte component as a toast. |
-| `toast.dismiss` | `(id: string) => void` | Programmatically dismisses a toast by ID. |
-| `toast.dismissAll` | `() => void` | Dismisses all active toasts. |
+<ApiTable 
+	headers={['Method', 'Signature']} 
+	keys={['method', 'signature']} 
+	data={toastMethods} 
+/>
 
 ## ToastData Interface
 
 The configuration object for an individual toast.
 
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `title` | `string` | The main title of the notification. |
-| `description` | `string` | Detailed message or description. |
-| `duration` | `number` | Override the default duration for this specific toast. `Infinity` keeps it open. |
-| `variant` | `default` \| `success` \| `warning` \| `destructive` | The visual style of the toast. |
-| `action` | `{ label: string, onClick: () => void }` | Renders an action button. |
-| `onClose` | `() => void` | Callback fired when the toast is closed/dismissed. |
-| `position` | `ToastPosition` | Override the global position for this specific toast. |
-| `className` | `string` | Additional CSS classes for the toast container. |
-| `component` | `Component` | (Internal) The custom component to render. |
-| `componentProps` | `Record<string, any>` | Props to pass to the custom component. |
+<ApiTable 
+	headers={['Property', 'Type']} 
+	keys={['prop', 'type']} 
+	data={toastData} 
+/>

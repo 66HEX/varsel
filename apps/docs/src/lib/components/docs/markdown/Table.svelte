@@ -11,7 +11,7 @@ type ComponentProps = {
 let { children, class: className = "", ...restProps }: ComponentProps = $props();
 </script>
 
-<div class="my-8 w-full overflow-hidden rounded-xl border border-border bg-card">
+<div class="my-8 w-full rounded-xl border border-border bg-card">
 	<div class="overflow-x-auto">
 		<table {...restProps} class={cn("w-full text-xs [&_code]:text-xs", className)}>
 			{@render children?.()}
