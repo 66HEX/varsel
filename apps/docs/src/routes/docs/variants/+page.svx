@@ -64,7 +64,10 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 @source "./**/*.{svelte,js,ts}";
 
 :root {
+	/* Base hue used for generating the color palette (oklch) */
 	--base-hue: 265;
+
+	/* Semantic color tokens */
 	--color-vs-popover: oklch(1 0 0);
 	--color-vs-popover-muted: oklch(0.96 0.002 var(--base-hue));
 	--color-vs-foreground: oklch(0.1408 0.0044 var(--base-hue));
@@ -75,6 +78,7 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 	--color-vs-warning: oklch(0.8 0.2 75);
 	--color-vs-success: oklch(0.7 0.18 155);
 
+	/* Shadows */
 	--shadow-vs-button:
 		0px 1px 1px -0.5px rgba(0, 0, 0, 0.15), 0px 3px 3px -1.5px
 		rgba(0, 0, 0, 0.05);
@@ -85,9 +89,12 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 		0px 12px 12px -6px rgba(0, 0, 0, 0.05),
 		0px 24px 24px -12px rgba(0, 0, 0, 0.05),
 		0px 48px 48px -24px rgba(0, 0, 0, 0.05);
+
+	/* Radius & Easing */
 	--radius-base: 0.125rem;
 	--ease-vs-button: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	--ease-vs-toast: cubic-bezier(0.32, 0.72, 0, 1);
+	--ease-vs-pop: cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .dark {
@@ -119,8 +126,10 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 	--radius-vs-lg: calc(var(--radius-base) * 4);
 	--ease-vs-button: var(--ease-vs-button);
 	--ease-vs-toast: var(--ease-vs-toast);
+	--ease-vs-pop: var(--ease-vs-pop);
 }
 
+/* Spinner Styles */
 .vs-spinner {
 	display: inline-flex;
 	width: 1rem;
@@ -138,7 +147,7 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 }
 
 .vs-spinner--finish {
-	animation: vs-spinner-finish 0.42s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+	animation: vs-spinner-finish 0.42s var(--ease-vs-toast) forwards;
 }
 
 .vs-spinner svg {
@@ -147,6 +156,7 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 	animation: vs-spin 1s linear infinite;
 }
 
+/* Icon Styles */
 .vs-icon {
 	display: inline-flex;
 	width: 1rem;
@@ -169,7 +179,7 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 }
 
 .vs-icon--pop {
-	animation: vs-icon-pop 0.36s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+	animation: vs-icon-pop 0.36s var(--ease-vs-pop) forwards;
 }
 
 .vs-icon svg {
