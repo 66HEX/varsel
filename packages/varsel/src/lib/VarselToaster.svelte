@@ -25,14 +25,41 @@ export {
 		toastState,
 		toasterInstanceManager,
 		type ToastData,
+		type ToastPosition,
 	} from './internals';
 
-	let { expandedGap = undefined }: { 
+	let { 
+		expandedGap = undefined,
+		position = 'bottom-center',
+		visibleToasts = 3,
+		expand = true,
+		duration = 5000,
+		closeButton = true,
+		pauseOnHover = true,
+		offset = undefined,
+		dir = 'auto'
+	}: { 
 		/**
 		 * The gap (in pixels) between expanded toasts when hovering over the stack.
 		 * If undefined, uses the default value from animation config.
 		 */
-		expandedGap?: number 
+		expandedGap?: number;
+		/** Default position for toasts. */
+		position?: ToastPosition;
+		/** Maximum number of visible toasts in the stack. */
+		visibleToasts?: number;
+		/** Whether to expand the stack on hover. */
+		expand?: boolean;
+		/** Default duration in milliseconds. */
+		duration?: number;
+		/** Whether to show the close button by default. */
+		closeButton?: boolean;
+		/** Whether to pause the timer on hover. */
+		pauseOnHover?: boolean;
+		/** Offset from the edge of the screen. */
+		offset?: number | string;
+		/** Directionality of the text. */
+		dir?: 'ltr' | 'rtl' | 'auto';
 	} = $props();
 
 	let toasts = $state<ToastData[]>([]);
@@ -55,9 +82,17 @@ export {
 </script>
 
 {#if toasterInstanceManager.isActiveInstance(instanceId)}
-	{#if expandedGap === undefined}
-		<VarselManager {toasts} onRemove={handleRemove} />
-	{:else}
-		<VarselManager {toasts} onRemove={handleRemove} {expandedGap} />
-	{/if}
+	<VarselManager 
+		{toasts} 
+		onRemove={handleRemove} 
+		{expandedGap}
+		{position}
+		{visibleToasts}
+		{expand}
+		{duration}
+		{closeButton}
+		{pauseOnHover}
+		{offset}
+		{dir}
+	/>
 {/if}

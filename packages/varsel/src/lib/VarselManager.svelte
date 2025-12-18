@@ -18,13 +18,26 @@ let {
 	toasts = [],
 	onRemove,
 	expandedGap = ANIMATION_CONFIG.EXPANDED_GAP,
+	position: defaultPosition = 'bottom-center',
+	visibleToasts = 3,
+	expand = true,
+	duration = 5000,
+	closeButton = true,
+	pauseOnHover = true,
+	offset = undefined,
+	dir = 'auto'
 }: {
-	/** The list of all active toasts from the global state. */
 	toasts?: ToastData[];
-	/** Callback to remove a toast from the state. */
 	onRemove: (id: string) => void;
-	/** The gap in pixels between toasts when expanded. */
 	expandedGap?: number;
+	position?: ToastPosition;
+	visibleToasts?: number;
+	expand?: boolean;
+	duration?: number;
+	closeButton?: boolean;
+	pauseOnHover?: boolean;
+	offset?: number | string;
+	dir?: 'ltr' | 'rtl' | 'auto';
 } = $props();
 
 const createPositionMap = <T>(value: () => T): Record<ToastPosition, T> => ({
@@ -90,7 +103,7 @@ const updateHoldState = (
 $effect(() => {
 	const grouped = createPositionMap<ToastData[]>(() => []);
 	for (const toast of toasts) {
-		const pos = toast.position || "bottom-center";
+		const pos = toast.position || defaultPosition;
 		grouped[pos].push(toast);
 	}
 
@@ -118,6 +131,7 @@ $effect(() => {
 
 			return {
 				...toast,
+				position: position,
 				index: stackIndex,
 				renderIndex: orderIndex,
 				total: list.length,
@@ -289,7 +303,7 @@ $effect(() => {
 			let bottom = Number.NEGATIVE_INFINITY;
 			let any = false;
 			for (const t of group) {
-				if (t.index >= ANIMATION_CONFIG.MAX_VISIBLE_TOASTS) continue;
+				if (t.index >= visibleToasts) continue;
 				const el = document.querySelector(
 					`[data-toast-id="${t.id}"]`,
 				) as HTMLElement | null;
@@ -356,7 +370,10 @@ const handleHeightChange = (id: string, height: number) => {
 </script>
 
 {#if toasts.length > 0}
-	<div class="pointer-events-none fixed inset-0 z-50">
+	<div 
+		class="pointer-events-none fixed inset-0 z-50"
+		{dir}
+	>
 		{#each positionEntries as [position, positionToasts]}
 			{@const pos = position}
 			{@const expandedOffsets = expandedOffsetData.byPosition[pos]}
@@ -365,7 +382,7 @@ const handleHeightChange = (id: string, height: number) => {
 			{@const isHeld = (heldToasts[pos]?.size ?? 0) > 0}
 			{@const isGroupActive = isHovered || isHeld}
 			{@const activeToasts = positionToasts.filter((toast) => !toast.shouldClose)}
-			{@const visibleStackLimit = Math.max(ANIMATION_CONFIG.MAX_VISIBLE_TOASTS - 1, 0)}
+			{@const visibleStackLimit = Math.max(visibleToasts - 1, 0)}
 			{@const maxVisibleStackIndex = Math.min(
 				Math.max(activeToasts.length - 1, 0),
 				visibleStackLimit,
@@ -382,7 +399,7 @@ const handleHeightChange = (id: string, height: number) => {
 					: undefined}
 			{#each positionToasts as toast, idx (toast.id)}
 				{@const toastIsHidden =
-					toast.index >= ANIMATION_CONFIG.MAX_VISIBLE_TOASTS}
+					toast.index >= visibleToasts}
 				{@const hiddenCollapsedOffset = toastIsHidden
 					? sharedHiddenCollapsedOffset ?? collapsedOffsets?.[idx]
 					: collapsedOffsets?.[idx]}
@@ -401,6 +418,12 @@ const handleHeightChange = (id: string, height: number) => {
 						updateHoldState(pos, toast.id, holding)}
 					collapsedOffset={collapsedOffsetValue}
 					hiddenCollapsedOffset={hiddenCollapsedOffset}
+					defaultDuration={duration}
+					defaultShowClose={closeButton}
+					{pauseOnHover}
+					{offset}
+					{expand}
+					{visibleToasts}
 				/>
 			{/each}
 		{/each}

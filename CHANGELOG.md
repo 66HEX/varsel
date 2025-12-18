@@ -6,6 +6,24 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.4.0] – 2025-12-18
+
+### Added
+
+- **Enhanced Toaster Configuration**  
+  The `<VarselToaster />` component now accepts a comprehensive set of props for global configuration:
+  - `position` (default: `'bottom-center'`): Sets the default placement for toasts.
+  - `visibleToasts` (default: `3`): Controls the maximum number of toasts visible at once.
+  - `expand` (default: `true`): Determines if the toast stack expands on hover.
+  - `duration` (default: `5000`): Sets the default auto-dismiss timer in milliseconds.
+  - `closeButton` (default: `true`): Toggles the visibility of the close button.
+  - `pauseOnHover` (default: `true`): Pauses the timer when the user hovers over a toast.
+  - `offset` (default: `undefined`): Adds custom spacing from the viewport edges.
+  - `dir` (default: `'auto'`): specifices text direction ('ltr', 'rtl', or 'auto').
+
+- **API Reference Documentation**  
+  Added a dedicated "API Reference" page to the documentation site, providing detailed information on all exported components, functions, and types.
+
 ## [0.3.0] – 2025-12-16
 
 ### Added

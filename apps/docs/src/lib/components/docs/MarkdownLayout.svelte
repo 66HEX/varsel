@@ -16,6 +16,12 @@ export { default as p } from "./markdown/Paragraph.svelte";
 export { default as pre } from "./markdown/Pre.svelte";
 export { MarkdownPre };
 export { default as ul } from "./markdown/UnorderedList.svelte";
+export { default as table } from "./markdown/Table.svelte";
+export { default as thead } from "./markdown/Thead.svelte";
+export { default as tbody } from "./markdown/Tbody.svelte";
+export { default as tr } from "./markdown/Tr.svelte";
+export { default as th } from "./markdown/Th.svelte";
+export { default as td } from "./markdown/Td.svelte";
 </script>
 
 <script lang="ts">

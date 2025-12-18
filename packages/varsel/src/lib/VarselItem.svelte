@@ -39,34 +39,36 @@ let {
 	onHeightChange = undefined,
 	onGroupHoverEnter = undefined,
 	onGroupHoldChange = undefined,
+	defaultDuration = 5000,
+	defaultShowClose = true,
+	pauseOnHover = true,
+	offset = undefined,
+	expand = true,
+	visibleToasts = ANIMATION_CONFIG.MAX_VISIBLE_TOASTS
 }: {
-	/** The toast data object containing all content and state. */
 	toast: PositionedToast;
-	/** Callback to remove the toast from the DOM after exit animation. */
 	onRemove: (id: string) => void;
-	/** Whether the parent group (stack) is currently hovered. */
 	isGroupHovered?: boolean;
-	/** The vertical offset for this toast when the stack is expanded. */
 	expandedOffset?: number;
-	/** The gap between toasts when expanded. */
 	expandedGap?: number;
-	/** The vertical offset for this toast when the stack is collapsed. */
 	collapsedOffset?: number;
-	/** The offset to use when the toast is hidden in the stack. */
 	hiddenCollapsedOffset?: number;
-	/** Callback to report the height of the toast to the manager. */
 	onHeightChange?: (id: string, height: number) => void;
-	/** Callback to notify the manager that the user has entered the toast area. */
 	onGroupHoverEnter?: () => void;
-	/** Callback to notify the manager that the user is interacting (holding) the toast. */
 	onGroupHoldChange?: (holding: boolean) => void;
+	defaultDuration?: number;
+	defaultShowClose?: boolean;
+	pauseOnHover?: boolean;
+	offset?: number | string;
+	expand?: boolean;
+	visibleToasts?: number;
 } = $props();
 
 let id = $derived(toast.id);
 let title = $derived(toast.title);
 let description = $derived(toast.description);
 let variant = $derived(toast.variant || "default");
-let duration = $derived(toast.duration || 5000);
+let duration = $derived(toast.duration || defaultDuration);
 let action = $derived(toast.action);
 let isLoading = $derived(toast.isLoading || false);
 let index = $derived(toast.index);
@@ -75,7 +77,7 @@ let shouldClose = $derived(toast.shouldClose);
 let position = $derived(toast.position || "bottom-center");
 let className = $derived(toast.className || "");
 let onClose = $derived(toast.onClose);
-let showClose = $derived(toast.showClose ?? true);
+let showClose = $derived(toast.showClose ?? defaultShowClose);
 
 let toastRef = $state<HTMLDivElement | null>(null);
 let isItemHovered = $state(false);
@@ -312,8 +314,9 @@ $effect(() => {
 				remainingTime = duration;
 			}
 
+			const isHovering = isGroupHovered || isItemHovered;
 			const isPaused =
-				isGroupHovered || isItemHovered || isSwiping || hiddenByStacking;
+				(pauseOnHover && isHovering) || isSwiping || hiddenByStacking;
 
 			if (isPaused) {
 				if (timeoutRef) {
@@ -520,7 +523,7 @@ const zIndexBase = Number(ANIMATION_CONFIG.Z_INDEX_BASE);
 
 let isTopPosition = $derived(position?.startsWith("top-") ?? false);
 let maxVisibleIndex = $derived(
-	Math.max(0, ANIMATION_CONFIG.MAX_VISIBLE_TOASTS - 1),
+	Math.max(0, visibleToasts - 1),
 );
 let visibleIndex = $derived(Math.min(index, maxVisibleIndex));
 let defaultCollapsedOffset = $derived(
@@ -549,7 +552,7 @@ let visibleScale = $derived(
 	),
 );
 let zIndex = $derived(zIndexBase - renderIndex);
-let stackHidden = $derived(index >= ANIMATION_CONFIG.MAX_VISIBLE_TOASTS);
+let stackHidden = $derived(index >= visibleToasts);
 let hiddenByStacking = $derived(stackHidden && animationState !== "exiting");
 let isStackLeader = $derived(index === 0);
 let isLatest = $derived(isStackLeader && !shouldClose);
@@ -581,12 +584,12 @@ let transformStyle = $derived.by(() => {
 	let opacityValue = stackHidden ? 0 : 1;
 
 	if (stackHidden) {
-		if (isGroupHovered && animationState !== "exiting") {
+		if (expand && isGroupHovered && animationState !== "exiting") {
 			translateX = 0;
 			translateY = hiddenExpandedTranslateY;
 			scaleValue = 1;
 		}
-	} else if (isGroupHovered && animationState !== "exiting") {
+	} else if (expand && isGroupHovered && animationState !== "exiting") {
 		translateX = 0;
 		translateY = expandedTranslateY;
 		scaleValue = 1;
@@ -684,6 +687,14 @@ let livePoliteness = $derived(
 	(variant === "destructive" ? "assertive" : "polite") as "assertive" | "polite",
 );
 
+let offsetStyle = $derived.by(() => {
+	if (offset === undefined) return undefined;
+	const val = typeof offset === "number" ? `${offset}px` : offset;
+	if (position.startsWith("top")) return `top: ${val};`;
+	if (position.startsWith("bottom")) return `bottom: ${val};`;
+	return undefined;
+});
+
 const handleBlurCapture = (event: FocusEvent) => {
 	const next = event.relatedTarget as Node | null;
 	if (!toastRef || !next || !toastRef.contains(next)) {
@@ -709,6 +720,7 @@ const handleBlurCapture = (event: FocusEvent) => {
         : `transform ${transitionDuration} ${transitionTimingFunction}, opacity ${transitionDuration} ${transitionTimingFunction}`}
     style:transform={transformStyle.transform}
     style:opacity={transformStyle.opacity}
+    style={offsetStyle}
     role={stackHidden ? undefined : liveRole}
     aria-live={stackHidden ? undefined : livePoliteness}
     aria-atomic={stackHidden ? undefined : "true"}
@@ -744,7 +756,7 @@ const handleBlurCapture = (event: FocusEvent) => {
 						type="button"
 						onclick={handleClose}
 						class={cn(
-							"absolute top-2 right-2 cursor-pointer rounded-vs-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
+							"absolute top-2 end-2 cursor-pointer rounded-vs-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
 						)}
 						aria-label="Close toast"
 					>
@@ -764,7 +776,7 @@ const handleBlurCapture = (event: FocusEvent) => {
 					</button>
 				{/if}
 
-				<div class="p-4 pr-8">
+				<div class="p-4 pe-8">
 					<div class="flex gap-3">
 						{#if showStatusIcon}
 							<span class="relative inline-flex h-4 w-4 shrink-0 items-center justify-center">
