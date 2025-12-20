@@ -33,8 +33,10 @@ export interface ToastData extends VariantProps<typeof toastContainerVariants> {
 		/** Callback function executed when the action button is clicked. */
 		onClick: () => void;
 	};
-	/** Callback function executed when the toast is closed. */
-	onClose?: () => void;
+	/** Callback fired when the toast finishes its auto-close timer. */
+	onAutoClose?: () => void;
+	/** Callback fired when the toast is dismissed manually (button, swipe, `toast.dismiss`, etc.). */
+	onDismiss?: () => void;
 	/** Internal flag: signals that the toast should begin its closing animation. */
 	shouldClose?: boolean;
 	/** Internal flag: signals that the toast is currently leaving the DOM. */

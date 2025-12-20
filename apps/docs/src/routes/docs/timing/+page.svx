@@ -130,4 +130,4 @@ The `toast` helper returns the id of the new toast so you can dismiss it later. 
 	</button>
 </div>
 
-Manual dismissal also runs the toast’s `onClose` callback if you supplied one.
+Manual dismissal also runs the toast’s `onDismiss` callback if you supplied one, while timer-based exits call `onAutoClose`.

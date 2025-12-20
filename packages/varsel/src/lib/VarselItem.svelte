@@ -76,7 +76,8 @@ let renderIndex = $derived(toast.renderIndex);
 let shouldClose = $derived(toast.shouldClose);
 let position = $derived(toast.position || "bottom-center");
 let className = $derived(toast.className || "");
-let onClose = $derived(toast.onClose);
+let onAutoClose = $derived(toast.onAutoClose);
+let onDismiss = $derived(toast.onDismiss);
 let showClose = $derived(toast.showClose ?? defaultShowClose);
 
 let toastRef = $state<HTMLDivElement | null>(null);
@@ -172,6 +173,9 @@ const getFocusableElements = () => {
 	);
 };
 
+type CloseReason = "auto" | "dismiss" | null;
+let closeReason: CloseReason = null;
+
 const handleTransitionEnd = (event: TransitionEvent) => {
 	if (event.target !== toastRef) return;
 	if (event.propertyName !== "opacity" && event.propertyName !== "transform")
@@ -180,15 +184,20 @@ const handleTransitionEnd = (event: TransitionEvent) => {
 	if (exitAnimationComplete) return;
 
 	exitAnimationComplete = true;
-	onClose?.();
+	if (closeReason === "auto") {
+		onAutoClose?.();
+	} else if (closeReason === "dismiss") {
+		onDismiss?.();
+	}
 	onRemove(id);
 };
 
-const handleClose = () => {
+const handleClose = (reason: Exclude<CloseReason, null> = "dismiss") => {
 	if (!toastRef || isExiting) return;
 
 	isExiting = true;
 	exitAnimationComplete = false;
+	closeReason = reason;
 
 	toastState.update(id, { shouldClose: true });
 
@@ -334,11 +343,11 @@ $effect(() => {
 					if (!Number.isFinite(ms)) {
 						// Do not set timeout for infinite duration
 					} else if (ms === 0) {
-						handleClose();
+						handleClose("auto");
 					} else {
 						timerStartRef = Date.now();
 						timeoutRef = setTimeout(() => {
-							handleClose();
+							handleClose("auto");
 						}, ms);
 					}
 				}
@@ -754,7 +763,7 @@ const handleBlurCapture = (event: FocusEvent) => {
 				{#if showClose}
 					<button
 						type="button"
-						onclick={handleClose}
+						onclick={() => handleClose()}
 						class={cn(
 							"absolute top-2 end-2 cursor-pointer rounded-vs-sm p-1 text-vs-foreground/45 hover:bg-vs-popover-muted hover:text-vs-foreground/70 transition-[background-color,color,box-shadow] ease-vs-button duration-100 focus-visible:ring-1 focus-visible:ring-vs-ring/50 focus-visible:outline-none",
 						)}

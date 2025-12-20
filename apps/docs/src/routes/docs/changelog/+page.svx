@@ -6,12 +6,17 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [Unreleased]
+## [0.5.0] – 2025-12-20
 
 ### Added
 
 - **Info Toast Variant**  
   Added `toast.info()` helper method to the toast API, providing a dedicated variant for informational messages alongside the existing success, warning, and error toasts.
+
+### Changed
+
+- **Lifecycle callbacks**  
+  Replaced the single `onClose` hook with two dedicated callbacks: `onAutoClose` (fires after the auto-dismiss timer) and `onDismiss` (fires after manual/programmatic dismissal). Update existing toasts to use the hook that matches the desired behavior.
 
 ---
 

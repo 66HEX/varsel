@@ -10,7 +10,7 @@ Varsel is a headless yet opinionated toast system for Svelte apps. This monorepo
 - **Expressive API** – fire `toast()` with copy objects or quick helpers such as `toast.success`, `toast.warning`, `toast.error`.
 - **Status variants** – pick between default, success, warning, and destructive palettes or override the supplied CSS variables to match your brand.
 - **Positions & gestures** – anchor stacks to any corner or center edge; swipe gestures mirror automatically for the chosen position.
-- **Actions & lifecycle hooks** – attach a single action button, pause timers on focus/hover, and run `onClose` callbacks after exit.
+- **Actions & lifecycle hooks** – attach a single action button, pause timers on focus/hover, and react to `onAutoClose` / `onDismiss` callbacks after exit.
 - **Promise helpers** – `toast.promise` keeps people informed while async work is running, complete with spinner states.
 
 ## Repo structure

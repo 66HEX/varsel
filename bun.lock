@@ -33,7 +33,7 @@
     },
     "packages/varsel": {
       "name": "varsel",
-      "version": "0.3.0",
+      "version": "0.5.0",
       "dependencies": {
         "class-variance-authority": "^0.7.1",
       },

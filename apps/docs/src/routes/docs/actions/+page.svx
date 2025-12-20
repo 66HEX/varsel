@@ -14,12 +14,15 @@ const showActionToast = () => {
 	});
 };
 
-const showCloseHookToast = () => {
+const showLifecycleToast = () => {
 	const id = toast({
 		title: "Export ready",
 		description: "Opening the download dialog...",
-		onClose: () => {
-			console.log(`Toast ${id} has left the screen`);
+		onAutoClose: () => {
+			console.log(`Toast ${id} closed itself after the timer elapsed`);
+		},
+		onDismiss: () => {
+			console.log(`Toast ${id} was dismissed manually`);
 		},
 	});
 };
@@ -74,17 +77,25 @@ Provide an `action` object with a `label` and an `onClick` handler. The handler 
 	</button>
 </div>
 
-## Close hooks
+## Lifecycle hooks
 
-The optional `onClose` callback fires once the toast fully exits the viewport (for example after a timer, swipe gesture or `toast.dismiss`). Use it to trigger follow-up work such as clearing stores or kicking off another toast.
+Two callbacks help you distinguish why a toast disappeared:
+
+- `onAutoClose` fires once the toast finishes its timer-based exit.
+- `onDismiss` runs when the toast is closed manually (close button, swipe, `toast.dismiss`, `toast.dismissAll`, etc.).
+
+Both callbacks run after the exit animation completes, so follow-up work can assume the toast has already left the DOM.
 
 ```ts
 const id = toast({
 	title: "Export ready",
 	description: "Opening the download dialog...",
-	onClose: () => {
-		console.log(`Toast ${id} has left the screen`);
+	onAutoClose: () => {
+		console.log(`Toast ${id} closed on its own`);
 	},
+	onDismiss: () => {
+		console.log(`Toast ${id} was dismissed manually`);
+	}
 });
 ```
 
@@ -92,9 +103,9 @@ const id = toast({
 	<button
 		type="button"
 		class="rounded-md bg-card border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-card-muted shadow-sm transition-[background-color,scale] duration-150 ease-out active:scale-[0.975]"
-		onclick={showCloseHookToast}
+		onclick={showLifecycleToast}
 	>
-		Trigger close hook
+		Try lifecycle hooks
 	</button>
 </div>
 
