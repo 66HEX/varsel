@@ -65,6 +65,18 @@ createToast.warning = (
 };
 
 /**
+ * Creates an info variant toast.
+ */
+createToast.info = (
+	data: Omit<ToastData, "id" | "variant"> | string,
+): string => {
+	if (typeof data === "string") {
+		return toastState.add({ description: data, variant: "info" });
+	}
+	return toastState.add({ ...data, variant: "info" });
+};
+
+/**
  * Creates an error (destructive) variant toast.
  */
 createToast.error = (

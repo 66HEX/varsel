@@ -34,6 +34,7 @@ export const toastContainerVariants = cva(
 					"rounded-vs-lg border shadow-vs-toast border-vs-border bg-vs-popover text-vs-warning/90",
 				destructive:
 					"rounded-vs-lg border shadow-vs-toast border-vs-border bg-vs-popover text-vs-destructive/90",
+				info: "rounded-vs-lg border shadow-vs-toast border-vs-border bg-vs-popover text-vs-info/90",
 				custom: "",
 			},
 		},
@@ -56,6 +57,7 @@ export const toastContentVariants = cva("relative overflow-hidden rounded-vs-lg"
 			success: "",
 			warning: "",
 			destructive: "",
+			info: "",
 			custom: "",
 		},
 	},

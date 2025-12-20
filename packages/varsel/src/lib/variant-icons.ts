@@ -4,7 +4,7 @@
  */
 import type { ToastData } from "./internals";
 
-const ICON_VARIANTS = ["success", "warning", "destructive"] as const;
+const ICON_VARIANTS = ["success", "warning", "destructive", "info"] as const;
 
 export type IconVariant = (typeof ICON_VARIANTS)[number];
 
@@ -43,6 +43,14 @@ export const variantIconMap = {
 			{ tag: "circle", cx: 12, cy: 12, r: 10 },
 			{ tag: "path", d: "m15 9-6 6" },
 			{ tag: "path", d: "m9 9 6 6" },
+		],
+	},
+	info: {
+		viewBox: "0 0 24 24",
+		elements: [
+			{ tag: "circle", cx: 12, cy: 12, r: 10 },
+			{ tag: "line", x1: 12, y1: 16, x2: 12, y2: 12 },
+			{ tag: "line", x1: 12, y1: 8, x2: 12.01, y2: 8 },
 		],
 	},
 } satisfies Record<IconVariant, VariantIconDefinition>;

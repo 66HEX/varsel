@@ -39,7 +39,7 @@ const docDescription = $derived(
 );
 const canonicalUrl = $derived(currentUrl.href);
 const docOgImage = $derived(
-	new URL("/web-app-manifest-512x512.png", currentUrl).href,
+	new URL("/og-image.jpg", currentUrl).href,
 );
 const docOgImageAlt = "Varsel logomark";
 const docsRootUrl = $derived(new URL("/docs", currentUrl).href);

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { toast } from "varsel";
 
-const variantOptions = ["default", "success", "warning", "destructive"] as const;
+const variantOptions = ["default", "success", "warning", "destructive", "info"] as const;
 
 const triggerVariant = (variant: (typeof variantOptions)[number]) =>
 	toast({
@@ -17,13 +17,13 @@ Varsel keeps visuals opinionated yet flexible. Choose a preset variant for statu
 
 ## Variant property
 
-Set the `variant` property when invoking `toast`. Available values are `default`, `success`, `warning` and `destructive`.
+Set the `variant` property when invoking `toast`. Available values are `default`, `success`, `warning`, `destructive` and `info`.
 
 ```svelte
 <script lang="ts">
 	import { toast } from "varsel";
 
-	const variants = ["default", "success", "warning", "destructive"] as const;
+	const variants = ["default", "success", "warning", "destructive", "info"] as const;
 </script>
 
 <div class="flex flex-wrap gap-3">
@@ -77,6 +77,7 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 	--color-vs-destructive: oklch(0.62 0.21 25);
 	--color-vs-warning: oklch(0.8 0.2 75);
 	--color-vs-success: oklch(0.7 0.18 155);
+	--color-vs-info: oklch(0.7 0.18 240);
 
 	/* Shadows */
 	--shadow-vs-button:
@@ -107,6 +108,7 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 	--color-vs-destructive: oklch(0.72 0.27 25);
 	--color-vs-warning: oklch(0.82 0.24 85);
 	--color-vs-success: oklch(0.78 0.25 155);
+	--color-vs-info: oklch(0.78 0.18 240);
 }
 
 @theme {
@@ -119,6 +121,7 @@ Varsel’s default look ships from the bundled stylesheet, but everything is pow
 	--color-vs-destructive: var(--vs-destructive);
 	--color-vs-warning: var(--vs-warning);
 	--color-vs-success: var(--vs-success);
+	--color-vs-info: var(--vs-info);
 	--shadow-vs-button: var(--shadow-vs-button);
 	--shadow-vs-toast: var(--shadow-vs-toast);
 	--radius-vs-sm: calc(var(--radius-base) * 2);

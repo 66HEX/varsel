@@ -92,6 +92,10 @@ export type ToastInvoker = {
 	 */
 	warning: (data: Omit<ToastData, "id" | "variant"> | string) => string;
 	/**
+	 * Creates an info toast notification.
+	 */
+	info: (data: Omit<ToastData, "id" | "variant"> | string) => string;
+	/**
 	 * Creates an error toast notification.
 	 */
 	error: (data: Omit<ToastData, "id" | "variant"> | string) => string;

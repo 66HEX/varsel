@@ -23,6 +23,7 @@
 	--color-vs-destructive: oklch(0.62 0.21 25);
 	--color-vs-warning: oklch(0.8 0.2 75);
 	--color-vs-success: oklch(0.7 0.18 155);
+	--color-vs-info: oklch(0.7 0.18 240);
 
 	/* Shadows */
 	--shadow-vs-button:
@@ -53,6 +54,7 @@
 	--color-vs-destructive: oklch(0.72 0.27 25);
 	--color-vs-warning: oklch(0.82 0.24 85);
 	--color-vs-success: oklch(0.78 0.25 155);
+	--color-vs-info: oklch(0.78 0.18 240);
 }
 
 @theme {
@@ -65,6 +67,7 @@
 	--color-vs-destructive: var(--vs-destructive);
 	--color-vs-warning: var(--vs-warning);
 	--color-vs-success: var(--vs-success);
+	--color-vs-info: var(--vs-info);
 	--shadow-vs-button: var(--shadow-vs-button);
 	--shadow-vs-toast: var(--shadow-vs-toast);
 	--radius-vs-sm: calc(var(--radius-base) * 2);

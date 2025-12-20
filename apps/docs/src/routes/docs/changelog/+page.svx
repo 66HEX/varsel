@@ -6,6 +6,15 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Info Toast Variant**  
+  Added `toast.info()` helper method to the toast API, providing a dedicated variant for informational messages alongside the existing success, warning, and error toasts.
+
+---
+
 ## [0.4.0] – 2025-12-18
 
 ### Added

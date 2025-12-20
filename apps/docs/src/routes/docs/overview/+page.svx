@@ -33,6 +33,14 @@ const helperExamples = [
 				description: "Rollback is running.",
 			}),
 	},
+	{
+		label: "Info",
+		handler: () =>
+			toast.info({
+				title: "Deployment started",
+				description: "Your changes are being deployed.",
+			}),
+	},
 ];
 </script>
 
