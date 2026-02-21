@@ -31,6 +31,16 @@ const resolvePromiseState = async <Value>(
 	return normalizeToastData(resolvedValue);
 };
 
+const getPromiseFallbackDescription = (error: unknown): string => {
+	if (error instanceof Error) {
+		return error.message;
+	}
+	if (typeof error === "string") {
+		return error;
+	}
+	return "An unknown error occurred while updating the notification.";
+};
+
 /**
  * The main entry point for creating toasts.
  * @param data - Toast configuration object or description string.
@@ -139,13 +149,26 @@ createToast.promise = <T, E = unknown>(
 		});
 	};
 
-	Promise.resolve(promise)
-		.then(async (value) => {
-			await handleResult(options.success, value, "success");
-			return value;
+	const applyPromiseFallback = (error: unknown) => {
+		toastState.update(toastId, {
+			title: "Operation failed",
+			description: getPromiseFallbackDescription(error),
+			variant: "destructive",
+			isLoading: false,
+			showClose: true,
+			duration: 5000,
+		});
+	};
+
+	void Promise.resolve(promise)
+		.then((value) => {
+			return handleResult(options.success, value, "success");
 		})
-		.catch(async (error: E) => {
-			await handleResult(options.error, error, "destructive");
+		.catch((error: E) => {
+			return handleResult(options.error, error, "destructive");
+		})
+		.catch((error) => {
+			applyPromiseFallback(error);
 		});
 
 	return toastId;

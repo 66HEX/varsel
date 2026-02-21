@@ -197,4 +197,35 @@ describe('Varsel Integration Tests', () => {
 		});
 		expect(screen.queryByLabelText('Close toast')).not.toBeInTheDocument();
 	});
+
+	it('falls back to a safe destructive state when promise callbacks throw', async () => {
+		render(VarselToaster);
+
+		act(() => {
+			toast.promise(Promise.resolve('ok'), {
+				loading: 'Loading fallback path...',
+				success: () => {
+					throw new Error('Success renderer crashed');
+				},
+				error: () => {
+					throw new Error('Error renderer crashed');
+				},
+			});
+		});
+
+		expect(await screen.findByText('Loading fallback path...')).toBeInTheDocument();
+
+		await waitFor(() => {
+			expect(screen.getByText('Operation failed')).toBeInTheDocument();
+			expect(screen.getByText('Error renderer crashed')).toBeInTheDocument();
+		});
+
+		const fallbackToast = toastState
+			.getToasts()
+			.find((t) => t.description === 'Error renderer crashed');
+
+		expect(fallbackToast?.isLoading).toBe(false);
+		expect(fallbackToast?.variant).toBe('destructive');
+		expect(fallbackToast?.showClose).toBe(true);
+	});
 });
