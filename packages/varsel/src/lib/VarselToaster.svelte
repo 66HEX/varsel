@@ -18,8 +18,9 @@ export {
 	 * It subscribes to the global toast state and renders the `VarselManager`
 	 * which handles the positioning and layout of individual toasts.
 	 *
-	 * Place this component once in your application's root layout (e.g., `+layout.svelte`).
-	 */
+ * Place this component once in your application's root layout (e.g., `+layout.svelte`).
+ */
+	import { onMount } from 'svelte';
 	import VarselManager from './VarselManager.svelte';
 	import {
 		toastState,
@@ -63,25 +64,30 @@ export {
 	} = $props();
 
 	let toasts = $state<ToastData[]>([]);
-	const instanceId = toasterInstanceManager.registerInstance();
+	let instanceId = $state<string | null>(null);
 
 	const handleRemove = (id: string) => {
 		toastState.remove(id);
 	};
 
-	$effect(() => {
+	onMount(() => {
+		const registeredInstanceId = toasterInstanceManager.registerInstance();
+		instanceId = registeredInstanceId;
 		toasts = toastState.getToasts();
 		const unsubscribe = toastState.subscribe((value) => {
 			toasts = value;
 		});
 		return () => {
 			unsubscribe();
-			toasterInstanceManager.unregisterInstance(instanceId);
+			toasterInstanceManager.unregisterInstance(registeredInstanceId);
+			if (instanceId === registeredInstanceId) {
+				instanceId = null;
+			}
 		};
 	});
 </script>
 
-{#if toasterInstanceManager.isActiveInstance(instanceId)}
+{#if instanceId && toasterInstanceManager.isActiveInstance(instanceId)}
 	<VarselManager 
 		{toasts} 
 		onRemove={handleRemove} 
