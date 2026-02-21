@@ -6,6 +6,22 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.2] – 2026-02-21
+
+### Fixed
+
+- **Reliable npm release artifacts**  
+  Fixed package publishing configuration so npm releases now always include built `dist/*` output instead of metadata files only.
+- **Persistent toast duration**  
+  `duration: 0` now consistently keeps a toast visible until manual dismissal.
+
+### Changed
+
+- **Release pipeline scripts**  
+  Added `prepublishOnly` build hook and split CSS scripts into one-shot (`build:css`) and watch mode (`build:css:watch`) to avoid blocking publish builds.
+
+---
+
 ## [0.5.1] – 2026-02-21
 
 ### Fixed

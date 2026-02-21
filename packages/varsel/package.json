@@ -1,6 +1,6 @@
 {
 	"name": "varsel",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "Headless yet opinionated toast notifications for Svelte apps.",
 	"type": "module",
 	"license": "MIT",
@@ -36,11 +36,13 @@
 		"./package.json": "./package.json"
 	},
 	"scripts": {
-		"build:css": "npx @tailwindcss/cli -i ./src/lib/styles.css -o ./dist/styles.css --watch --minify",
+		"build:css": "npx @tailwindcss/cli -i ./src/lib/styles.css -o ./dist/styles.css --minify",
+		"build:css:watch": "npx @tailwindcss/cli -i ./src/lib/styles.css -o ./dist/styles.css --watch --minify",
 		"build": "bun run build:css && svelte-package",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
-		"dev": "svelte-package --watch",
-		"lint": "tsc -p tsconfig.json --noEmit"
+		"dev": "bun run build:css:watch & svelte-package --watch",
+		"lint": "tsc -p tsconfig.json --noEmit",
+		"prepublishOnly": "bun run build"
 	},
 	"dependencies": {
 		"class-variance-authority": "^0.7.1"
