@@ -6,6 +6,27 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.4] – 2026-02-21
+
+### Fixed
+
+- **SSR-safe toaster registration**  
+  Moved `<VarselToaster />` instance registration to `onMount`, preventing singleton instance leakage during SSR and ensuring unregister runs only for client-mounted instances.
+- **Hardened `toast.promise` error path**  
+  Added a defensive final fallback when promise `success`/`error` render callbacks throw, so the toast always leaves loading state and resolves into a safe destructive notification.
+
+### Changed
+
+- **Promise fallback regression coverage**  
+  Added integration coverage for callback-throwing `toast.promise` flows to guard against unhandled rejections and stuck loading toasts.
+
+### Performance
+
+- **Stack hover throttling**  
+  Optimized hover hit-testing for toast stacks by throttling `mousemove` processing through `requestAnimationFrame`, reducing repeated layout reads under high pointer frequency.
+
+---
+
 ## [0.5.3] – 2026-02-21
 
 ### Fixed
