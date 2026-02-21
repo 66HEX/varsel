@@ -41,6 +41,7 @@
 		"build": "bun run build:css && svelte-package",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"dev": "bun run build:css:watch & svelte-package --watch",
+		"test": "vitest run",
 		"lint": "tsc -p tsconfig.json --noEmit",
 		"prepublishOnly": "bun run build"
 	},
