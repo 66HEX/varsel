@@ -150,4 +150,51 @@ describe('Varsel Integration Tests', () => {
 			expect(screen.getByText('Success: Data Loaded')).toBeInTheDocument();
 		}, { timeout: 2000 });
 	});
+
+	it('shows close button by default for promise toasts', async () => {
+		render(VarselToaster);
+		let resolvePromise: (val: string) => void;
+		const promise = new Promise<string>((resolve) => {
+			resolvePromise = resolve;
+		});
+
+		act(() => {
+			toast.promise(promise, {
+				loading: 'Loading Closable...',
+				success: 'Done',
+				error: 'Error',
+			});
+		});
+
+		expect(await screen.findByText('Loading Closable...')).toBeInTheDocument();
+		expect(screen.getByLabelText('Close toast')).toBeInTheDocument();
+
+		await act(async () => {
+			resolvePromise!('ok');
+			await wait(50);
+		});
+
+		expect(await screen.findByText('Done')).toBeInTheDocument();
+		expect(screen.getByLabelText('Close toast')).toBeInTheDocument();
+	});
+
+	it('respects showClose: false for promise toasts', async () => {
+		render(VarselToaster);
+
+		act(() => {
+			toast.promise(Promise.resolve('ok'), {
+				loading: { description: 'No Close Loading', showClose: false },
+				success: { description: 'No Close Success', showClose: false },
+				error: 'Error',
+			});
+		});
+
+		expect(await screen.findByText('No Close Loading')).toBeInTheDocument();
+		expect(screen.queryByLabelText('Close toast')).not.toBeInTheDocument();
+
+		await waitFor(() => {
+			expect(screen.getByText('No Close Success')).toBeInTheDocument();
+		});
+		expect(screen.queryByLabelText('Close toast')).not.toBeInTheDocument();
+	});
 });

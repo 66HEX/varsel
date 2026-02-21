@@ -121,7 +121,7 @@ createToast.promise = <T, E = unknown>(
 		...loadingData,
 		duration: loadingData.duration ?? 0,
 		isLoading: true,
-		showClose: loadingData.showClose ?? false,
+		showClose: loadingData.showClose ?? true,
 	});
 
 	const handleResult = async <Value>(
@@ -135,7 +135,7 @@ createToast.promise = <T, E = unknown>(
 			isLoading: false,
 			duration: payload.duration,
 			variant: payload.variant ?? defaultVariant,
-			showClose: payload.showClose ?? false,
+			showClose: payload.showClose ?? true,
 		});
 	};
 
