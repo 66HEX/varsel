@@ -5,6 +5,7 @@
 class ToasterInstanceManager {
 	private activeInstanceId: string | null = null;
 	private instanceCounter = 0;
+	private instanceIds: string[] = [];
 
 	/**
 	 * Registers a new toaster instance.
@@ -12,7 +13,11 @@ class ToasterInstanceManager {
 	 */
 	registerInstance(): string {
 		const instanceId = `toaster-${++this.instanceCounter}`;
-		if (!this.activeInstanceId) {
+		this.instanceIds.push(instanceId);
+		if (
+			!this.activeInstanceId ||
+			!this.instanceIds.includes(this.activeInstanceId)
+		) {
 			this.activeInstanceId = instanceId;
 		}
 		return instanceId;
@@ -23,8 +28,14 @@ class ToasterInstanceManager {
 	 * @param instanceId - The ID of the instance to unregister.
 	 */
 	unregisterInstance(instanceId: string): void {
+		this.instanceIds = this.instanceIds.filter((id) => id !== instanceId);
 		if (this.activeInstanceId === instanceId) {
-			this.activeInstanceId = null;
+			this.activeInstanceId = this.instanceIds[0] ?? null;
+		} else if (
+			this.activeInstanceId &&
+			!this.instanceIds.includes(this.activeInstanceId)
+		) {
+			this.activeInstanceId = this.instanceIds[0] ?? null;
 		}
 	}
 
