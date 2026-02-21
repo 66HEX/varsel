@@ -19,7 +19,7 @@ export interface ToastData extends VariantProps<typeof toastContainerVariants> {
 	className?: string;
 	/** 
 	 * Duration in milliseconds before the toast automatically closes.
-	 * Defaults to 5000ms. Set to `Infinity` to keep open indefinitely.
+	 * Defaults to 5000ms. Set to `0` or `Infinity` to keep open indefinitely.
 	 */
 	duration?: number;
 	/** Whether the toast is in a loading state. */

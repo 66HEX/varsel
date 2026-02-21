@@ -6,6 +6,20 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.1] – 2026-02-21
+
+### Fixed
+
+- **Persistent toast duration**  
+  Fixed a regression where `duration: 0` could be treated as the default timeout, causing "persistent" toasts to auto-dismiss. `duration: 0` now correctly keeps a toast visible until manual dismissal.
+
+### Changed
+
+- **Regression test coverage**  
+  Added an interaction test that verifies `duration: 0` toasts remain open over time.
+
+---
+
 ## [0.5.0] – 2025-12-20
 
 ### Added

@@ -51,6 +51,23 @@ describe('Varsel Interactions', () => {
 		expect(t?.shouldClose).toBe(true);
 	});
 
+	it('keeps a duration: 0 toast open until manual dismissal', async () => {
+		render(VarselToaster);
+
+		act(() => {
+			toast({ title: 'Persistent Toast', duration: 0 });
+		});
+
+		await screen.findByText('Persistent Toast');
+
+		act(() => {
+			vi.advanceTimersByTime(20_000);
+		});
+
+		const t = toastState.getToasts().find(t => t.title === 'Persistent Toast');
+		expect(t?.shouldClose).not.toBe(true);
+	});
+
 	it('executes the action callback and closes toast on action click', async () => {
 		render(VarselToaster);
 		const actionSpy = vi.fn();
