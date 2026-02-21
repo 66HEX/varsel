@@ -6,6 +6,24 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.3] – 2026-02-21
+
+### Fixed
+
+- **Promise toast dismissibility defaults**  
+  `toast.promise(...)` now keeps the close button enabled by default (consistent with global toast defaults), while still respecting explicit `showClose: false`.
+- **Toaster instance failover**  
+  When the active `<VarselToaster />` unmounts, the next registered instance is now promoted automatically, preventing rendering gaps with multiple mounted toasters.
+
+### Changed
+
+- **Regression coverage for instance management**  
+  Added dedicated unit tests for active-instance promotion and stale active-id recovery in the toaster instance manager.
+- **Test runner ergonomics**  
+  Added a package-level `test` script (`vitest run`) for straightforward test execution via `bun run --cwd=packages/varsel test`.
+
+---
+
 ## [0.5.2] – 2026-02-21
 
 ### Fixed

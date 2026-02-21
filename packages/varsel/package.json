@@ -1,6 +1,6 @@
 {
 	"name": "varsel",
-	"version": "0.5.2",
+	"version": "0.5.3",
 	"description": "Headless yet opinionated toast notifications for Svelte apps.",
 	"type": "module",
 	"license": "MIT",
