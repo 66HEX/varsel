@@ -19,7 +19,7 @@
 		{ method: 'toast.warning', signature: '(data: string | ToastData) => string', description: "Creates a warning variant toast." },
 		{ method: 'toast.error', signature: '(data: string | ToastData) => string', description: "Creates an error variant toast." },
 		{ method: 'toast.info', signature: '(data: string | ToastData) => string', description: "Creates an info variant toast." },
-		{ method: 'toast.promise', signature: '(promise: Promise, options: ToastPromiseOptions) => string', description: "Creates a toast that updates automatically based on a promise." },
+		{ method: 'toast.promise', signature: '(promise: Promise, options: ToastPromiseOptions) => string', description: "Creates a toast that updates automatically based on a promise. Promise toasts are closable by default unless showClose is overridden per state." },
 		{ method: 'toast.custom', signature: '(component: Component, options?: ToastData) => string', description: "Renders a custom Svelte component as a toast." },
 		{ method: 'toast.dismiss', signature: '(id: string) => void', description: "Programmatically dismisses a toast by ID." },
 		{ method: 'toast.dismissAll', signature: '() => void', description: "Dismisses all active toasts." }
@@ -29,6 +29,7 @@
 		{ prop: 'title', type: 'string', description: "The main title of the notification." },
 		{ prop: 'description', type: 'string', description: "Detailed message or description." },
 		{ prop: 'duration', type: 'number', description: "Override the default duration for this specific toast. Infinity keeps it open." },
+		{ prop: 'showClose', type: 'boolean', description: "Controls close button visibility and swipe dismissal availability for this toast. Defaults to true." },
 		{ prop: 'variant', type: "'default' | 'success' | 'warning' | 'destructive' | 'info'", description: "The visual style of the toast." },
 		{ prop: 'action', type: '{ label: string, onClick: () => void }', description: "Renders an action button." },
 		{ prop: 'onAutoClose', type: '() => void', description: "Runs after the toast finishes its auto-close timer." },

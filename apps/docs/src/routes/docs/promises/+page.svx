@@ -43,7 +43,7 @@ Not every action finishes instantly. `toast.promise` keeps people informed while
 
 ## Use `toast.promise`
 
-Pass any `Promise` and describe the text for each state. Varsel pins the toast open (duration `0`) while it is loading, renders a spinner beside the copy and then restores the normal timer once the promise settles.
+Pass any `Promise` and describe the text for each state. Varsel pins the toast open (duration `0`) while it is loading, renders a spinner beside the copy and then restores the normal timer once the promise settles. Promise toasts keep the close button enabled by default, so users can still dismiss long-running jobs manually.
 
 ```svelte
 <script lang="ts">
@@ -95,6 +95,31 @@ Pass any `Promise` and describe the text for each state. Varsel pins the toast o
 </div>
 
 `toast.promise` returns the toast id, so you can still dismiss or update it manually if the user cancels the job.
+
+## Control dismissibility per state
+
+If you want stricter behavior, set `showClose: false` for any state (`loading`, `success`, `error`). This disables the close button (and swipe dismissal) for that state only.
+
+```ts
+toast.promise(syncTeamData(), {
+	loading: {
+		title: "Syncing workspace",
+		description: "Reading remote changes…",
+		showClose: false,
+	},
+	success: {
+		title: "Sync complete",
+		description: "Everyone is up to date.",
+		showClose: false,
+	},
+	error: (error) => ({
+		title: "Sync failed",
+		description: error instanceof Error ? error.message : "Unknown error.",
+		showClose: true,
+		variant: "destructive",
+	}),
+});
+```
 
 ## Customize each state
 
