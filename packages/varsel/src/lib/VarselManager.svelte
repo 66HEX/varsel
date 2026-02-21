@@ -290,9 +290,12 @@ $effect(() => {
 });
 
 $effect(() => {
-	const handleMouseMove = (event: MouseEvent) => {
+	let hoverFrameId: number | null = null;
+	let pointerX = 0;
+	let pointerY = 0;
+
+	const updateHoverState = (x: number, y: number) => {
 		if (latestPositionEntries.length === 0) return;
-		const { clientX: x, clientY: y } = event;
 		const next: Record<ToastPosition, boolean> = {
 			...latestHovered,
 		};
@@ -333,6 +336,19 @@ $effect(() => {
 		}
 	};
 
+	const flushHoverUpdate = () => {
+		hoverFrameId = null;
+		updateHoverState(pointerX, pointerY);
+	};
+
+	const handleMouseMove = (event: MouseEvent) => {
+		pointerX = event.clientX;
+		pointerY = event.clientY;
+		if (hoverFrameId == null) {
+			hoverFrameId = requestAnimationFrame(flushHoverUpdate);
+		}
+	};
+
 	const handleKeyDown = (event: KeyboardEvent) => {
 		if (event.key !== "Escape") return;
 		for (const [, group] of latestPositionEntries) {
@@ -358,6 +374,10 @@ $effect(() => {
 	document.addEventListener("mousemove", handleMouseMove);
 	document.addEventListener("keydown", handleKeyDown);
 	return () => {
+		if (hoverFrameId != null) {
+			cancelAnimationFrame(hoverFrameId);
+			hoverFrameId = null;
+		}
 		document.removeEventListener("mousemove", handleMouseMove);
 		document.removeEventListener("keydown", handleKeyDown);
 	};
